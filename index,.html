@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050606">
+<title>lume</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --dark-bg:#050606;
+  --cream:#EEEAE1;
+  --acid:#D7FA2C;
+  --acid-ink:#2C3800;
+  --light-input:#FBFAF7;
+}
+
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+.isn{font-family:'Instrument Sans', Inter, system-ui, sans-serif;}
+.isf{font-family:'Instrument Serif', Georgia, serif;}
+
+html, body{
+  height:100%;
+  margin:0;
+  overscroll-behavior-y:none;
+  font-family:'Instrument Sans', Inter, system-ui, sans-serif;
+}
+
+body{
+  display:flex;
+  flex-direction:column;
+  transition:background 0.25s ease, color 0.25s ease;
+}
+body[data-theme="dark"]{ background:var(--dark-bg); color:var(--cream); }
+body[data-theme="light"]{ background:var(--cream); color:var(--dark-bg); }
+
+/* header (só na aba hoje) */
+.app-header{
+  display:flex; justify-content:space-between; align-items:flex-start;
+  padding:calc(env(safe-area-inset-top,0px) + 18px) 20px 6px;
+  flex-shrink:0; position:relative; z-index:20;
+}
+.brand-word{ font-size:19px; font-weight:600; letter-spacing:0.07em; margin:0; }
+.brand-sig{ font-size:15px; font-style:italic; margin:2px 0 0; opacity:0.55; }
+.header-actions{ display:flex; align-items:center; gap:10px; }
+.icon-btn{
+  width:32px; height:32px; border-radius:50%; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; background:transparent; color:inherit; opacity:0.65;
+}
+body[data-theme="dark"] .icon-btn:hover{ background:rgba(238,234,225,0.08); }
+body[data-theme="light"] .icon-btn:hover{ background:rgba(5,6,6,0.06); }
+.avatar{
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:600; flex-shrink:0;
+}
+body[data-theme="dark"] .avatar{ background:rgba(238,234,225,0.12); }
+body[data-theme="light"] .avatar{ background:rgba(5,6,6,0.1); }
+
+/* settings dropdown */
+.settings-menu{
+  position:absolute; top:56px; right:20px; width:230px;
+  border-radius:14px; padding:6px; z-index:30;
+  opacity:0; transform:translateY(-6px); pointer-events:none;
+  transition:opacity 0.15s ease, transform 0.15s ease;
+  box-shadow:0 14px 34px rgba(0,0,0,0.22);
+}
+.settings-menu.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+body[data-theme="dark"] .settings-menu{ background:#141513; border:1px solid rgba(238,234,225,0.1); }
+body[data-theme="light"] .settings-menu{ background:#ffffff; border:1px solid rgba(5,6,6,0.08); }
+.settings-row{ display:flex; align-items:center; justify-content:space-between; padding:11px 12px; font-size:13.5px; }
+.settings-link{ cursor:pointer; opacity:0.8; }
+body[data-theme="dark"] .settings-link:hover{ background:rgba(238,234,225,0.06); border-radius:9px; }
+body[data-theme="light"] .settings-link:hover{ background:rgba(5,6,6,0.04); border-radius:9px; }
+.settings-divider{ height:1px; margin:2px 8px; }
+body[data-theme="dark"] .settings-divider{ background:rgba(238,234,225,0.1); }
+body[data-theme="light"] .settings-divider{ background:rgba(5,6,6,0.08); }
+
+.theme-switch{
+  width:42px; height:24px; border-radius:20px; border:none; cursor:pointer; position:relative; padding:0;
+  transition:background 0.2s ease; flex-shrink:0;
+}
+body[data-theme="dark"] .theme-switch{ background:rgba(238,234,225,0.18); }
+body[data-theme="light"] .theme-switch{ background:var(--dark-bg); }
+.theme-switch .knob{
+  position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%;
+  background:var(--cream); transition:transform 0.2s ease; display:block;
+}
+body[data-theme="light"] .theme-switch .knob{ transform:translateX(18px); background:var(--acid); }
+
+/* trail */
+.trail-card{ border-radius:14px; padding:12px 14px; margin:14px 0 20px; }
+body[data-theme="dark"] .trail-card{ background:rgba(238,234,225,0.045); }
+body[data-theme="light"] .trail-card{ background:rgba(5,6,6,0.045); }
+.trail-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; font-size:12px; }
+.trail-top .muted{ opacity:0.55; }
+.trail-bars{ display:flex; gap:3px; align-items:flex-end; height:20px; }
+.trail-bars div{ flex:1; border-radius:2px; }
+body[data-theme="dark"] .bar-empty{ background:rgba(238,234,225,0.14); }
+body[data-theme="dark"] .bar-fill{ background:rgba(215,250,44,0.45); }
+body[data-theme="dark"] .bar-today{ background:var(--acid); }
+body[data-theme="light"] .bar-empty{ background:rgba(5,6,6,0.12); }
+body[data-theme="light"] .bar-fill{ background:rgba(5,6,6,0.5); }
+body[data-theme="light"] .bar-today{ background:var(--dark-bg); }
+
+/* reading */
+.reading-date{ font-size:12px; letter-spacing:0.04em; opacity:0.5; margin:0 0 12px; }
+.reading-head{ font-size:28px; line-height:1.28; margin:0 0 14px; font-weight:400; }
+.reading-body{ font-size:15px; line-height:1.7; margin:0 0 20px; opacity:0.72; max-width:560px; }
+.reading-body strong{ opacity:1; font-weight:600; color:inherit; }
+
+/* why card */
+.why-card{ border-radius:14px; padding:14px; margin-bottom:18px; border:1px solid; cursor:pointer; max-width:560px; }
+body[data-theme="dark"] .why-card{ border-color:rgba(238,234,225,0.16); }
+body[data-theme="light"] .why-card{ border-color:rgba(5,6,6,0.14); }
+.why-top{ display:flex; justify-content:space-between; align-items:center; }
+.why-pill{ font-size:10.5px; letter-spacing:0.04em; font-weight:600; }
+body[data-theme="dark"] .why-pill{ color:var(--acid); }
+body[data-theme="light"] .why-pill{ background:var(--acid); color:var(--acid-ink); padding:3px 9px; border-radius:20px; }
+.why-chevron{ transition:transform 0.2s ease; opacity:0.5; flex-shrink:0; }
+.why-card.expanded .why-chevron{ transform:rotate(180deg); }
+.why-body{ max-height:0; overflow:hidden; transition:max-height 0.25s ease, margin-top 0.25s ease; margin-top:0; }
+.why-card.expanded .why-body{ max-height:220px; margin-top:12px; }
+.why-item{ display:flex; gap:9px; margin-bottom:10px; font-size:12.5px; line-height:1.55; opacity:0.68; }
+.why-item:last-child{ margin-bottom:0; }
+.why-item svg{ flex-shrink:0; margin-top:1px; opacity:0.7; }
+
+/* compose */
+.compose-card{ border-radius:16px; padding:16px; margin-bottom:16px; max-width:560px; }
+body[data-theme="dark"] .compose-card{ background:rgba(238,234,225,0.05); }
+body[data-theme="light"] .compose-card{ background:rgba(5,6,6,0.05); }
+.compose-q{ font-size:19px; font-family:'Instrument Serif', serif; line-height:1.35; margin:0 0 12px; }
+.compose-box{
+  border-radius:10px; padding:12px; margin-bottom:10px;
+  font-family:'Instrument Sans', sans-serif; font-size:14px; width:100%;
+  border:1px solid; resize:none; min-height:60px; display:block;
+}
+body[data-theme="dark"] .compose-box{ background:rgba(5,6,6,0.6); border-color:rgba(238,234,225,0.14); color:var(--cream); }
+body[data-theme="light"] .compose-box{ background:var(--light-input); border-color:rgba(5,6,6,0.13); color:var(--dark-bg); }
+.compose-box::placeholder{ opacity:0.4; font-family:'Instrument Sans', sans-serif; }
+.save-btn{
+  border-radius:10px; padding:12px; text-align:center; font-size:14px; font-weight:600;
+  border:none; width:100%; cursor:pointer; font-family:'Instrument Sans', sans-serif;
+  transition:opacity 0.15s ease;
+}
+body[data-theme="dark"] .save-btn{ background:var(--acid); color:var(--acid-ink); }
+body[data-theme="light"] .save-btn{ background:var(--dark-bg); color:var(--cream); }
+.save-btn:active{ opacity:0.75; }
+.save-msg{ font-size:12px; text-align:center; margin:9px 0 0; opacity:0; transition:opacity 0.2s ease; }
+body[data-theme="dark"] .save-msg{ color:var(--acid); }
+body[data-theme="light"] .save-msg{ color:var(--dark-bg); font-weight:600; }
+.save-msg.show{ opacity:0.85; }
+
+/* decisions summary (home) */
+.decisions-summary{
+  border-radius:14px; padding:14px 16px; margin-bottom:24px; max-width:560px;
+  display:flex; justify-content:space-between; align-items:center; cursor:pointer;
+}
+body[data-theme="dark"] .decisions-summary{ background:rgba(238,234,225,0.045); }
+body[data-theme="light"] .decisions-summary{ background:rgba(5,6,6,0.045); }
+.decisions-summary .d-title{ font-size:13.5px; font-weight:600; margin:0 0 3px; }
+.decisions-summary .d-sub{ font-size:11.5px; opacity:0.5; margin:0; }
+
+/* section titles */
+.section-title{ font-size:17px; font-weight:600; margin:0 0 4px; }
+.section-sub{ font-size:12.5px; opacity:0.5; margin:0 0 14px; }
+
+/* decision cards / list */
+.decision-card{
+  border-radius:14px; padding:14px; margin-bottom:10px; border:1px solid; cursor:pointer; max-width:560px;
+  transition:border-color 0.15s ease;
+}
+body[data-theme="dark"] .decision-card{ border-color:rgba(238,234,225,0.18); }
+body[data-theme="light"] .decision-card{ border-color:rgba(5,6,6,0.16); }
+.decision-card:hover{ border-color:var(--acid); }
+.decision-card-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
+.decision-card-top .name{ font-size:14.5px; font-weight:500; }
+.decision-card-top .age{ font-size:11.5px; opacity:0.45; }
+.decision-note{ font-size:12.5px; opacity:0.6; margin:0 0 8px; line-height:1.5; }
+.status-pill{ font-size:11px; padding:3px 9px; border-radius:20px; display:inline-block; }
+.status-pill.waiting{ background:rgba(215,250,44,0.16); color:#aacc2a; }
+body[data-theme="light"] .status-pill.waiting{ background:rgba(5,6,6,0.08); color:var(--dark-bg); }
+.status-pill.progress{ opacity:0.6; }
+body[data-theme="dark"] .status-pill.progress{ background:rgba(238,234,225,0.1); }
+body[data-theme="light"] .status-pill.progress{ background:rgba(5,6,6,0.08); }
+
+.add-decision{
+  border-radius:14px; padding:14px; text-align:center; border:1px dashed; cursor:pointer; opacity:0.7; max-width:560px;
+}
+body[data-theme="dark"] .add-decision{ border-color:rgba(238,234,225,0.25); color:var(--acid); }
+body[data-theme="light"] .add-decision{ border-color:rgba(5,6,6,0.22); color:var(--dark-bg); }
+
+/* decision detail */
+.detail-view{ display:none; }
+.detail-view.active{ display:block; }
+.back-row{ display:flex; align-items:center; gap:8px; margin-bottom:18px; cursor:pointer; font-size:13.5px; opacity:0.6; width:fit-content; }
+.detail-tag{ font-size:12.5px; font-weight:600; margin:0 0 10px; }
+body[data-theme="dark"] .detail-tag{ color:var(--acid); }
+.detail-question{ font-size:21px; line-height:1.4; font-family:'Instrument Serif', serif; margin:0 0 16px; max-width:560px; }
+.quote-box{ border-radius:12px; padding:14px; margin-bottom:16px; max-width:560px; }
+body[data-theme="dark"] .quote-box{ background:rgba(238,234,225,0.06); }
+body[data-theme="light"] .quote-box{ background:rgba(5,6,6,0.05); }
+.quote-label{ font-size:11.5px; opacity:0.5; margin:0 0 6px; }
+.quote-text{ font-size:14px; line-height:1.6; margin:0; font-style:italic; }
+.outcomes{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; max-width:400px; }
+.outcome-btn{
+  border-radius:10px; padding:12px; text-align:center; font-size:13.5px; border:1px solid; cursor:pointer;
+  font-family:'Instrument Sans', sans-serif; background:transparent; color:inherit;
+  transition:background 0.15s ease, border-color 0.15s ease;
+}
+body[data-theme="dark"] .outcome-btn{ border-color:rgba(238,234,225,0.2); }
+body[data-theme="light"] .outcome-btn{ border-color:rgba(5,6,6,0.18); }
+.outcome-btn.selected{ background:var(--acid); border-color:var(--acid); color:var(--acid-ink); font-weight:600; }
+.detail-footnote{ font-size:11.5px; opacity:0.45; margin:14px 0 0; max-width:400px; line-height:1.5; }
+
+/* cycles */
+.cycle-card{ border-radius:14px; padding:16px; margin-bottom:12px; max-width:560px; }
+body[data-theme="dark"] .cycle-card{ border:1px solid rgba(238,234,225,0.16); }
+body[data-theme="light"] .cycle-card{ border:1px solid rgba(5,6,6,0.14); }
+.cycle-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:9px; }
+.cycle-top .cname{ font-size:14.5px; font-weight:500; }
+.cycle-top .cmeta{ font-size:11.5px; opacity:0.45; }
+.progress-track{ height:3px; border-radius:2px; overflow:hidden; margin-bottom:10px; }
+body[data-theme="dark"] .progress-track{ background:rgba(238,234,225,0.12); }
+body[data-theme="light"] .progress-track{ background:rgba(5,6,6,0.12); }
+.progress-fill{ height:100%; background:var(--acid); }
+body[data-theme="light"] .progress-fill{ background:var(--dark-bg); }
+.cycle-desc{ font-size:12.5px; opacity:0.6; line-height:1.6; margin:0; }
+.cycle-mini{ display:flex; justify-content:space-between; align-items:center; padding:13px 15px; border-radius:12px; margin-bottom:10px; font-size:12.5px; max-width:560px; }
+body[data-theme="dark"] .cycle-mini{ background:rgba(238,234,225,0.04); }
+body[data-theme="light"] .cycle-mini{ background:rgba(5,6,6,0.04); }
+.cycle-mini .label{ opacity:0.85; }
+.cycle-mini .when{ opacity:0.45; }
+
+/* historico */
+.timeline-item{ padding:14px 0; border-bottom:1px solid; max-width:560px; }
+body[data-theme="dark"] .timeline-item{ border-color:rgba(238,234,225,0.1); }
+body[data-theme="light"] .timeline-item{ border-color:rgba(5,6,6,0.09); }
+.timeline-item:last-child{ border-bottom:none; }
+.timeline-meta{ display:flex; justify-content:space-between; font-size:11.5px; opacity:0.48; margin:0 0 6px; }
+.timeline-quote{ font-size:14.5px; line-height:1.6; margin:0; font-family:'Instrument Serif', serif; font-style:italic; }
+.timeline-item.highlight{ border-bottom:none; border-radius:10px; padding:14px; margin-bottom:6px; }
+body[data-theme="dark"] .timeline-item.highlight{ background:rgba(215,250,44,0.06); }
+body[data-theme="light"] .timeline-item.highlight{ background:rgba(5,6,6,0.04); }
+
+/* screens */
+.screens{ flex:1; min-height:0; position:relative; }
+.screen{
+  position:absolute; inset:0;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:18px 20px calc(env(safe-area-inset-bottom,0px) + 24px);
+  opacity:0; pointer-events:none;
+  transform:translateY(6px);
+  transition:opacity 0.18s ease, transform 0.18s ease;
+}
+.screen.active{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.screen[data-screen="hoje"]{ padding-top:0; }
+
+/* bottom nav */
+.bottom-nav{
+  display:flex; justify-content:space-around; align-items:center;
+  padding:12px 0 calc(env(safe-area-inset-bottom,0px) + 14px);
+  flex-shrink:0; border-top:1px solid;
+}
+body[data-theme="dark"] .bottom-nav{ border-color:rgba(238,234,225,0.12); }
+body[data-theme="light"] .bottom-nav{ border-color:rgba(5,6,6,0.1); }
+.nav-btn{
+  background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px;
+  cursor:pointer; opacity:0.42; font-family:'Instrument Sans', sans-serif; padding:2px 12px;
+  transition:opacity 0.15s ease; color:inherit;
+}
+.nav-btn.active{ opacity:1; }
+body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
+.nav-btn span{ font-size:10.5px; font-weight:500; }
+
+/* onboarding overlay */
+.overlay{
+  position:fixed; inset:0; background:rgba(10,10,10,0.6);
+  display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
+  backdrop-filter:blur(2px);
+}
+.overlay.show{ display:flex; }
+.onboard-card{
+  width:100%; max-width:380px; height:92vh; max-height:640px;
+  background:var(--dark-bg); color:var(--cream); border-radius:26px;
+  padding:26px 22px 22px; position:relative; overflow:hidden;
+  box-shadow:0 30px 70px rgba(0,0,0,0.4);
+}
+.overlay-close{
+  position:absolute; top:16px; right:18px; background:none; border:none; color:rgba(238,234,225,0.5);
+  font-size:22px; cursor:pointer; line-height:1; z-index:5;
+}
+.ob-step{ display:none; height:100%; flex-direction:column; justify-content:space-between; }
+.ob-step.active{ display:flex; }
+.ob-progress{ display:flex; gap:5px; margin-bottom:22px; }
+.ob-progress div{ flex:1; height:2px; border-radius:2px; background:rgba(238,234,225,0.2); }
+.ob-progress div.done{ background:var(--acid); }
+.ob-word{ font-size:14px; letter-spacing:0.08em; margin:0 0 34px; opacity:0.9; }
+.ob-head{ font-size:23px; font-family:'Instrument Serif', serif; line-height:1.32; margin:0 0 12px; }
+.ob-body{ font-size:14px; line-height:1.65; opacity:0.62; margin:0 0 16px; }
+.ob-field{ border-bottom:1px solid rgba(238,234,225,0.2); padding:9px 0; margin-bottom:12px; }
+.ob-field .flabel{ font-size:10.5px; opacity:0.45; margin:0 0 3px; }
+.ob-field .fval{ font-size:14px; margin:0; }
+.ob-hint{ font-size:12px; opacity:0.4; margin:6px 0 0; }
+.ob-textarea{
+  background:rgba(238,234,225,0.05); border:1px solid rgba(238,234,225,0.14); border-radius:12px;
+  padding:13px; font-size:13.5px; min-height:80px; width:100%; color:var(--cream);
+  font-family:'Instrument Sans', sans-serif; resize:none;
+}
+.ob-textarea::placeholder{ opacity:0.35; }
+.ob-btn{
+  background:var(--acid); color:var(--acid-ink); border:none; border-radius:10px; padding:13px;
+  font-size:14.5px; font-weight:600; text-align:center; cursor:pointer; width:100%; font-family:'Instrument Sans', sans-serif;
+  margin-top:14px;
+}
+.ob-skip{ text-align:center; font-size:12.5px; opacity:0.4; margin:11px 0 0; cursor:pointer; }
+.ob-scroll{ overflow-y:auto; flex:1; }
+
+/* password gate */
+#gate{
+  position:fixed; inset:0; z-index:200;
+  background:var(--dark-bg); color:var(--cream);
+  display:flex; align-items:center; justify-content:center; padding:24px;
+}
+.gate-box{ width:100%; max-width:300px; text-align:left; }
+.gate-word{ font-size:19px; font-weight:600; letter-spacing:0.07em; margin:0; }
+.gate-sig{ font-size:15px; font-style:italic; opacity:0.55; margin:2px 0 22px; }
+.gate-text{ font-size:13.5px; line-height:1.6; opacity:0.62; margin:0 0 18px; }
+.gate-input{
+  width:100%; padding:13px; border-radius:10px; margin-bottom:10px;
+  background:rgba(238,234,225,0.06); border:1px solid rgba(238,234,225,0.18);
+  color:var(--cream); font-family:'Instrument Sans', sans-serif; font-size:14px;
+}
+.gate-input::placeholder{ color:rgba(238,234,225,0.35); }
+.gate-input:focus{ outline:none; border-color:var(--acid); }
+.gate-btn{
+  width:100%; padding:13px; border-radius:10px; border:none; cursor:pointer;
+  background:var(--acid); color:var(--acid-ink); font-weight:600; font-size:14px;
+  font-family:'Instrument Sans', sans-serif;
+}
+.gate-error{ font-size:12.5px; color:#ff8a8a; margin:10px 0 0; opacity:0; transition:opacity 0.15s ease; }
+.gate-error.show{ opacity:1; }
+</style>
+</head>
+<body data-theme="dark">
+
+<div id="gate">
+  <div class="gate-box">
+    <p class="gate-word isn">lume</p>
+    <p class="gate-sig isf">da Claudia</p>
+    <p class="gate-text isn">Este protótipo é privado. Digite a senha para continuar.</p>
+    <input type="password" id="gateInput" class="gate-input isn" placeholder="Senha" onkeydown="if(event.key==='Enter'){checkGate()}">
+    <button class="gate-btn isn" onclick="checkGate()">Entrar</button>
+    <p class="gate-error isn" id="gateError">Senha incorreta. Tente de novo.</p>
+  </div>
+</div>
+
+<!-- HOJE -->
+<div class="screens">
+<section class="screen active" data-screen="hoje">
+  <div class="app-header">
+    <div>
+      <p class="brand-word isn">lume</p>
+      <p class="brand-sig isf">da Claudia</p>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="settingsBtn" aria-label="Configurações">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+      </button>
+      <div class="avatar isn">C</div>
+    </div>
+  </div>
+
+  <div class="settings-menu" id="settingsMenu">
+    <div class="settings-row isn">
+      <span>Modo escuro</span>
+      <button class="theme-switch" id="themeSwitch" aria-label="Alternar tema"><span class="knob"></span></button>
+    </div>
+    <div class="settings-divider"></div>
+    <div class="settings-row settings-link isn" id="onboardTrigger">Ver onboarding (dia 1)</div>
+  </div>
+
+  <div class="trail-card">
+    <div class="trail-top isn">
+      <span class="muted">sua trilha</span>
+      <span>142 registros desde março</span>
+    </div>
+    <div class="trail-bars">
+      <div class="bar-empty" style="height:7px"></div>
+      <div class="bar-fill" style="height:13px"></div>
+      <div class="bar-fill" style="height:18px"></div>
+      <div class="bar-empty" style="height:7px"></div>
+      <div class="bar-fill" style="height:11px"></div>
+      <div class="bar-fill" style="height:16px"></div>
+      <div class="bar-empty" style="height:7px"></div>
+      <div class="bar-fill" style="height:20px"></div>
+      <div class="bar-empty" style="height:7px"></div>
+      <div class="bar-fill" style="height:14px"></div>
+      <div class="bar-fill" style="height:9px"></div>
+      <div class="bar-empty" style="height:7px"></div>
+      <div class="bar-fill" style="height:17px"></div>
+      <div class="bar-today" style="height:20px"></div>
+    </div>
+  </div>
+
+  <p class="reading-date isn">sábado, 22 de agosto</p>
+  <p class="reading-head isf">A lua passa hoje pela sua vênus. Você tende a confundir isso com urgência.</p>
+  <p class="reading-body isn">Aconteceu quatro vezes desde março. Em três delas você escreveu no mesmo dia sobre querer resolver alguma coisa rápido — e em duas, depois, marcou o desfecho como <strong>"foi misto"</strong>. Não é aviso. É só um padrão que aparece quando alguém olha por tempo suficiente.</p>
+
+  <div class="why-card isn" id="whyCard">
+    <div class="why-top">
+      <span class="why-pill">por que você recebeu isso</span>
+      <svg class="why-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="why-body">
+      <div class="why-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Lua a 9°14' de peixes, conjunta sua vênus natal a 9°02' — do seu mapa, não do seu signo</span>
+      </div>
+      <div class="why-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+        <span>4 registros seus em trânsitos iguais, entre março e agosto</span>
+      </div>
+      <div class="why-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h6a4 4 0 0 1 4 4v6"/></svg>
+        <span>2 decisões que você marcou como desfecho misto</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="compose-card">
+    <p class="compose-q">Tem alguma coisa que você quer resolver rápido hoje?</p>
+    <textarea class="compose-box isn" placeholder="Escreva algumas linhas…"></textarea>
+    <button class="save-btn" onclick="saveEntry(this)">Salvar</button>
+    <p class="save-msg isn">Registrado. Isso fica só com você.</p>
+  </div>
+
+  <div class="decisions-summary" onclick="goTab('decisoes')">
+    <div>
+      <p class="d-title isn">2 decisões esperando desfecho</p>
+      <p class="d-sub isn">a mais antiga tem 2 meses</p>
+    </div>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"><path d="M9 6l6 6-6 6"/></svg>
+  </div>
+</section>
+
+<!-- DECISOES -->
+<section class="screen" data-screen="decisoes">
+  <div class="list-view">
+    <p class="section-title isn">Decisões abertas</p>
+    <p class="section-sub isn">3 esperando desfecho</p>
+
+    <div class="decision-card" onclick="openDecision(this)"
+         data-name="Aceitar a proposta" data-age="há 12 dias"
+         data-quote="Tenho medo de repetir o que aconteceu no último trabalho.">
+      <div class="decision-card-top isn">
+        <span class="name">Aceitar a proposta</span>
+        <span class="age">há 12 dias</span>
+      </div>
+      <p class="decision-note isn">Mercúrio retrógrado · você anotou "medo de repetir"</p>
+      <span class="status-pill waiting isn">aguardando</span>
+    </div>
+
+    <div class="decision-card" onclick="openDecision(this)"
+         data-name="Mudar de cidade" data-age="há 2 meses"
+         data-quote="Ainda não sei se é a cidade ou se sou eu tentando fugir de alguma coisa.">
+      <div class="decision-card-top isn">
+        <span class="name">Mudar de cidade</span>
+        <span class="age">há 2 meses</span>
+      </div>
+      <p class="decision-note isn">Retorno solar · revisar em setembro</p>
+      <span class="status-pill progress isn">em curso</span>
+    </div>
+
+    <div class="add-decision isn">
+      <span>+ Abrir uma decisão</span>
+    </div>
+  </div>
+
+  <div class="detail-view" id="detailView">
+    <div class="back-row isn" onclick="closeDecision()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      <span>Decisões</span>
+    </div>
+    <p class="detail-tag isn">90 dias depois</p>
+    <p class="detail-question isf" id="detailQuestion">Você decidiu aceitar a proposta. Como terminou?</p>
+    <div class="quote-box">
+      <p class="quote-label isn">Na época você escreveu</p>
+      <p class="quote-text" id="detailQuote">"Tenho medo de repetir o que aconteceu no último trabalho."</p>
+    </div>
+    <div class="outcomes isn">
+      <div class="outcome-btn" onclick="selectOutcome(this)">Deu certo</div>
+      <div class="outcome-btn" onclick="selectOutcome(this)">Deu errado</div>
+      <div class="outcome-btn" onclick="selectOutcome(this)">Foi misto</div>
+      <div class="outcome-btn" onclick="selectOutcome(this)">Ainda não sei</div>
+    </div>
+    <p class="detail-footnote isn">Isso alimenta seu histórico. Ninguém mais vê.</p>
+  </div>
+</section>
+
+<!-- CICLOS -->
+<section class="screen" data-screen="ciclos">
+  <p class="section-title isn">Ciclos em curso</p>
+  <p class="section-sub isn">trânsitos longos que atravessam meses ou anos</p>
+
+  <div class="cycle-card">
+    <div class="cycle-top isn">
+      <span class="cname">Saturno na casa 10</span>
+      <span class="cmeta">mês 7 de 29</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:24%"></div></div>
+    <p class="cycle-desc isn">Um ciclo longo sobre trabalho e autoridade. Você já registrou 4 decisões dentro dele — incluindo "aceitar a proposta", ainda aberta.</p>
+  </div>
+
+  <div class="cycle-mini isn">
+    <span class="label">Retorno solar</span>
+    <span class="when">começa em set</span>
+  </div>
+  <div class="cycle-mini isn">
+    <span class="label">Trânsito de Júpiter pela casa 2</span>
+    <span class="when">termina em nov</span>
+  </div>
+</section>
+
+<!-- HISTORICO -->
+<section class="screen" data-screen="historico">
+  <p class="section-title isn">Seu histórico</p>
+  <p class="section-sub isn">142 registros desde março de 2026</p>
+
+  <div class="timeline-item highlight">
+    <div class="timeline-meta isn"><span>22 ago 2025</span><span>mesmo trânsito de hoje</span></div>
+    <p class="timeline-quote">"Acho que confiar é a parte que eu nunca aprendi a fazer sem me anular."</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-meta isn"><span>14 jun 2026</span><span>Sol em Gêmeos</span></div>
+    <p class="timeline-quote">"Acho que finalmente falei o que sentia, sem ensaiar antes."</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-meta isn"><span>3 mai 2026</span><span>Mercúrio retrógrado</span></div>
+    <p class="timeline-quote">"Reli o contrato três vezes antes de assinar. Ainda tenho medo de repetir."</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-meta isn"><span>19 mar 2026</span><span>Lua nova</span></div>
+    <p class="timeline-quote">"Não sei se é a cidade ou se sou eu tentando fugir de alguma coisa."</p>
+  </div>
+</section>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active isn" data-tab="hoje" onclick="goTab('hoje')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>
+    <span>hoje</span>
+  </button>
+  <button class="nav-btn isn" data-tab="decisoes" onclick="goTab('decisoes')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h6a4 4 0 0 1 4 4v6"/></svg>
+    <span>decisões</span>
+  </button>
+  <button class="nav-btn isn" data-tab="ciclos" onclick="goTab('ciclos')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(-20 12 12)"/><circle cx="12" cy="12" r="2"/></svg>
+    <span>ciclos</span>
+  </button>
+  <button class="nav-btn isn" data-tab="historico" onclick="goTab('historico')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+    <span>histórico</span>
+  </button>
+</nav>
+
+<!-- ONBOARDING OVERLAY -->
+<div class="overlay" id="onboardOverlay">
+  <div class="onboard-card">
+    <button class="overlay-close" onclick="closeOnboard()">×</button>
+
+    <div class="ob-step active" data-step="1">
+      <div class="ob-scroll">
+        <p class="ob-word isn">lume</p>
+        <p class="ob-head isf">Horóscopo é um texto para milhões de pessoas.</p>
+        <p class="ob-body isn">Aqui é diferente. O que você lê todo dia vem do seu mapa e do que você mesma escreveu antes. Quanto mais tempo você usa, menos genérico fica.</p>
+      </div>
+      <button class="ob-btn isn" onclick="obGo(2)">Começar</button>
+    </div>
+
+    <div class="ob-step" data-step="2">
+      <div class="ob-scroll">
+        <div class="ob-progress"><div class="done"></div><div class="done"></div><div></div></div>
+        <p class="ob-head isf">Quando e onde você nasceu?</p>
+        <p class="ob-body isn">A hora é o que separa você das outras pessoas do seu signo. Sem ela, o app tem que adivinhar — e aí vira horóscopo de novo.</p>
+        <div class="ob-field isn"><p class="flabel">data</p><p class="fval">14 / 03 / 1991</p></div>
+        <div class="ob-field isn"><p class="flabel">hora</p><p class="fval">06 : 40</p></div>
+        <div class="ob-field isn"><p class="flabel">cidade</p><p class="fval">Belo Horizonte, MG</p></div>
+        <p class="ob-hint isn">Não sei a hora — te ajudo a descobrir depois</p>
+      </div>
+      <button class="ob-btn isn" onclick="obGo(3)">Continuar</button>
+    </div>
+
+    <div class="ob-step" data-step="3">
+      <div class="ob-scroll">
+        <div class="ob-progress"><div class="done"></div><div class="done"></div><div class="done"></div></div>
+        <p class="ob-head isf">O que está aberto na sua vida agora?</p>
+        <p class="ob-body isn">Uma frase basta. Isso não vai para lugar nenhum — fica aqui, e é a primeira coisa que o app vai lembrar de você.</p>
+        <textarea class="ob-textarea isn" placeholder="Uma decisão, um medo, uma pergunta…"></textarea>
+      </div>
+      <div>
+        <button class="ob-btn isn" onclick="obGo(4)">Guardar</button>
+        <p class="ob-skip isn" onclick="obGo(4)">Pular por enquanto</p>
+      </div>
+    </div>
+
+    <div class="ob-step" data-step="4">
+      <div class="ob-scroll">
+        <p class="reading-date isn" style="margin-top:0;">sábado, 22 de agosto · seu primeiro dia</p>
+        <p class="ob-head isf" style="font-size:20px;">A lua passa hoje pela sua vênus, a 9° de peixes.</p>
+        <p class="ob-body isn">É um trânsito curto, de umas 12 horas, e no seu mapa ele toca a área de vínculos. Ainda não sei como ele costuma cair em você — vou saber depois de algumas passagens.</p>
+        <div style="border:1px dashed rgba(238,234,225,0.22); border-radius:12px; padding:12px;">
+          <p class="isn" style="font-size:10.5px; letter-spacing:0.05em; color:#D7FA2C; margin:0 0 6px;">o que vem por aí</p>
+          <p class="isn" style="font-size:12.5px; line-height:1.6; opacity:0.7; margin:0;">Na 3ª ou 4ª vez que esse trânsito voltar, já consigo te mostrar o que você escreveu nas anteriores.</p>
+        </div>
+      </div>
+      <button class="ob-btn isn" onclick="finishOnboard()">Ir para o app</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Troque a senha aqui:
+const SITE_PASSWORD = "claudia2026";
+
+const gate = document.getElementById('gate');
+const gateInput = document.getElementById('gateInput');
+const gateError = document.getElementById('gateError');
+
+if(sessionStorage.getItem('lumeUnlocked') === '1'){
+  gate.style.display = 'none';
+}
+
+function checkGate(){
+  if(gateInput.value === SITE_PASSWORD){
+    sessionStorage.setItem('lumeUnlocked', '1');
+    gate.style.display = 'none';
+  } else {
+    gateError.classList.add('show');
+    gateInput.value = '';
+    gateInput.focus();
+  }
+}
+
+function goTab(tab){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.dataset.screen === tab));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  if(tab !== 'decisoes'){ closeDecision(); }
+  closeSettings();
+}
+
+const body = document.body;
+const settingsMenu = document.getElementById('settingsMenu');
+const settingsBtn = document.getElementById('settingsBtn');
+
+document.getElementById('themeSwitch').addEventListener('click', function(e){
+  e.stopPropagation();
+  const isDark = body.dataset.theme === 'dark';
+  body.dataset.theme = isDark ? 'light' : 'dark';
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#EEEAE1' : '#050606');
+});
+
+settingsBtn.addEventListener('click', function(e){
+  e.stopPropagation();
+  settingsMenu.classList.toggle('show');
+});
+function closeSettings(){ settingsMenu.classList.remove('show'); }
+document.addEventListener('click', function(e){
+  if(!settingsMenu.contains(e.target) && e.target !== settingsBtn){ closeSettings(); }
+});
+
+document.getElementById('whyCard').addEventListener('click', function(){
+  this.classList.toggle('expanded');
+});
+
+function openDecision(card){
+  document.querySelector('.list-view').style.display = 'none';
+  const detail = document.getElementById('detailView');
+  detail.classList.add('active');
+  document.getElementById('detailQuestion').textContent = 'Você decidiu ' + card.dataset.name.toLowerCase() + '. Como terminou?';
+  document.getElementById('detailQuote').textContent = '"' + card.dataset.quote + '"';
+  detail.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+}
+function closeDecision(){
+  document.querySelector('.list-view').style.display = 'block';
+  document.getElementById('detailView').classList.remove('active');
+}
+function selectOutcome(btn){
+  btn.parentElement.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function saveEntry(btn){
+  const card = btn.closest('.compose-card');
+  const msg = card.querySelector('.save-msg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 2200);
+}
+
+const onboardOverlay = document.getElementById('onboardOverlay');
+document.getElementById('onboardTrigger').addEventListener('click', function(){
+  onboardOverlay.classList.add('show');
+  closeSettings();
+  obGo(1);
+});
+function closeOnboard(){ onboardOverlay.classList.remove('show'); }
+function obGo(step){
+  document.querySelectorAll('.ob-step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === step));
+}
+function finishOnboard(){
+  closeOnboard();
+  goTab('hoje');
+}
+</script>
+
+</body>
+</html>
