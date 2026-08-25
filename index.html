@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#050606">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#EEEAE1">
 <title>lume</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=Instrument+Sans:wght@400;500;600;700&display=swap');
 
 :root{
   --dark-bg:#050606;
@@ -18,7 +18,7 @@
 
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 .isn{font-family:'Instrument Sans', Inter, system-ui, sans-serif;}
-.isf{font-family:'Instrument Serif', Georgia, serif;}
+.isf{font-family:'Fraunces', Georgia, serif; font-weight:400;}
 
 html, body{
   height:100%;
@@ -35,7 +35,14 @@ body{
 body[data-theme="dark"]{ background:var(--dark-bg); color:var(--cream); }
 body[data-theme="light"]{ background:var(--cream); color:var(--dark-bg); }
 
-/* header (só na aba hoje) */
+button:focus-visible, [tabindex]:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
+  outline:2px solid var(--acid); outline-offset:2px;
+}
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; }
+}
+
+/* ---------- header ---------- */
 .app-header{
   display:flex; justify-content:space-between; align-items:flex-start;
   padding:calc(env(safe-area-inset-top,0px) + 18px) 20px 6px;
@@ -44,220 +51,454 @@ body[data-theme="light"]{ background:var(--cream); color:var(--dark-bg); }
 .brand-word{ font-size:19px; font-weight:600; letter-spacing:0.07em; margin:0; }
 .brand-sig{ font-size:15px; font-style:italic; margin:2px 0 0; opacity:0.55; }
 .header-actions{ display:flex; align-items:center; gap:10px; }
-.icon-btn{
-  width:32px; height:32px; border-radius:50%; border:none; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; background:transparent; color:inherit; opacity:0.65;
-}
-body[data-theme="dark"] .icon-btn:hover{ background:rgba(238,234,225,0.08); }
-body[data-theme="light"] .icon-btn:hover{ background:rgba(5,6,6,0.06); }
 .avatar{
-  width:32px; height:32px; border-radius:50%;
+  width:32px; height:32px; border-radius:50%; cursor:pointer; border:none; color:inherit;
   display:flex; align-items:center; justify-content:center;
-  font-size:12px; font-weight:600; flex-shrink:0;
+  font-size:12px; font-weight:600; flex-shrink:0; font-family:'Instrument Sans', sans-serif;
 }
 body[data-theme="dark"] .avatar{ background:rgba(238,234,225,0.12); }
 body[data-theme="light"] .avatar{ background:rgba(5,6,6,0.1); }
 
-/* settings dropdown */
-.settings-menu{
-  position:absolute; top:56px; right:20px; width:230px;
-  border-radius:14px; padding:6px; z-index:30;
-  opacity:0; transform:translateY(-6px); pointer-events:none;
-  transition:opacity 0.15s ease, transform 0.15s ease;
-  box-shadow:0 14px 34px rgba(0,0,0,0.22);
-}
-.settings-menu.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
-body[data-theme="dark"] .settings-menu{ background:#141513; border:1px solid rgba(238,234,225,0.1); }
-body[data-theme="light"] .settings-menu{ background:#ffffff; border:1px solid rgba(5,6,6,0.08); }
-.settings-row{ display:flex; align-items:center; justify-content:space-between; padding:11px 12px; font-size:13.5px; }
-.settings-link{ cursor:pointer; opacity:0.8; }
-body[data-theme="dark"] .settings-link:hover{ background:rgba(238,234,225,0.06); border-radius:9px; }
-body[data-theme="light"] .settings-link:hover{ background:rgba(5,6,6,0.04); border-radius:9px; }
-.settings-divider{ height:1px; margin:2px 8px; }
-body[data-theme="dark"] .settings-divider{ background:rgba(238,234,225,0.1); }
-body[data-theme="light"] .settings-divider{ background:rgba(5,6,6,0.08); }
-
 .theme-switch{
-  width:42px; height:24px; border-radius:20px; border:none; cursor:pointer; position:relative; padding:0;
-  transition:background 0.2s ease; flex-shrink:0;
+  width:52px; height:28px; border-radius:20px; border:none; cursor:pointer; position:relative; padding:0;
+  transition:background 0.2s ease; flex-shrink:0; display:flex; align-items:center;
+  justify-content:space-between; box-sizing:border-box;
 }
-body[data-theme="dark"] .theme-switch{ background:rgba(238,234,225,0.18); }
-body[data-theme="light"] .theme-switch{ background:var(--dark-bg); }
+body[data-theme="dark"] .theme-switch{ background:rgba(238,234,225,0.16); }
+body[data-theme="light"] .theme-switch{ background:rgba(5,6,6,0.1); }
 .theme-switch .knob{
-  position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%;
-  background:var(--cream); transition:transform 0.2s ease; display:block;
+  position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%;
+  transition:transform 0.22s ease; display:block; z-index:1;
 }
-body[data-theme="light"] .theme-switch .knob{ transform:translateX(18px); background:var(--acid); }
+body[data-theme="dark"] .theme-switch .knob{ background:var(--cream); }
+body[data-theme="light"] .theme-switch .knob{ transform:translateX(24px); background:var(--dark-bg); }
+.theme-switch .ts-sun, .theme-switch .ts-moon{ position:relative; z-index:2; flex-shrink:0; }
+.theme-switch .ts-sun{ margin-left:6px; }
+.theme-switch .ts-moon{ margin-right:6px; }
+body[data-theme="dark"] .ts-sun{ color:rgba(238,234,225,0.5); }
+body[data-theme="dark"] .ts-moon{ color:var(--dark-bg); }
+body[data-theme="light"] .ts-sun{ color:var(--acid-ink); }
+body[data-theme="light"] .ts-moon{ color:var(--cream); }
 
-/* trail */
-.trail-card{ border-radius:14px; padding:12px 14px; margin:14px 0 20px; }
-body[data-theme="dark"] .trail-card{ background:rgba(238,234,225,0.045); }
-body[data-theme="light"] .trail-card{ background:rgba(5,6,6,0.045); }
-.trail-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; font-size:12px; }
-.trail-top .muted{ opacity:0.55; }
-.trail-bars{ display:flex; gap:3px; align-items:flex-end; height:20px; }
-.trail-bars div{ flex:1; border-radius:2px; }
-body[data-theme="dark"] .bar-empty{ background:rgba(238,234,225,0.14); }
-body[data-theme="dark"] .bar-fill{ background:rgba(215,250,44,0.45); }
-body[data-theme="dark"] .bar-today{ background:var(--acid); }
-body[data-theme="light"] .bar-empty{ background:rgba(5,6,6,0.12); }
-body[data-theme="light"] .bar-fill{ background:rgba(5,6,6,0.5); }
-body[data-theme="light"] .bar-today{ background:var(--dark-bg); }
+/* ---------- shared blocks ---------- */
+.col{ max-width:560px; }
+.group{ border-radius:16px; padding:18px; margin-bottom:20px; max-width:560px; }
+body[data-theme="dark"] .group{ background:rgba(238,234,225,0.038); }
+body[data-theme="light"] .group{ background:rgba(5,6,6,0.033); }
+.group-label{ font-size:11px; letter-spacing:0.05em; opacity:0.5; margin:0 0 16px; text-transform:lowercase; }
+.group-divider{ height:1px; margin:18px 0; }
+body[data-theme="dark"] .group-divider{ background:rgba(238,234,225,0.1); }
+body[data-theme="light"] .group-divider{ background:rgba(5,6,6,0.09); }
+/* link de bloco: tratamento único para "ver mais" */
+.block-link{
+  display:inline-block; font-size:12px; line-height:1.5; margin-top:12px;
+  text-decoration:underline; cursor:pointer; opacity:0.7;
+  background:none; border:none; padding:0; color:inherit; font-family:'Instrument Sans', sans-serif;
+}
+.block-link:hover{ opacity:1; }
+.section-title{ font-size:17px; font-weight:600; margin:0 0 4px; }
+.section-sub{ font-size:12.5px; opacity:0.5; margin:0 0 16px; max-width:520px; line-height:1.5; }
 
-/* reading */
-.reading-date{ font-size:12px; letter-spacing:0.04em; opacity:0.5; margin:0 0 12px; }
-.reading-head{ font-size:28px; line-height:1.28; margin:0 0 14px; font-weight:400; }
-.reading-body{ font-size:15px; line-height:1.7; margin:0 0 20px; opacity:0.72; max-width:560px; }
+/* ---------- reading ---------- */
+.reading-date{ font-size:12px; letter-spacing:0.04em; opacity:0.5; margin:14px 0 12px; }
+.reading-head{ font-size:28px; line-height:1.28; margin:0 0 14px; font-weight:400; max-width:560px; }
+.reading-body{ font-size:15px; line-height:1.7; margin:0 0 18px; opacity:0.75; max-width:560px; }
 .reading-body strong{ opacity:1; font-weight:600; color:inherit; }
 
-/* why card */
-.why-card{ border-radius:14px; padding:14px; margin-bottom:18px; border:1px solid; cursor:pointer; max-width:560px; }
-body[data-theme="dark"] .why-card{ border-color:rgba(238,234,225,0.16); }
-body[data-theme="light"] .why-card{ border-color:rgba(5,6,6,0.14); }
-.why-top{ display:flex; justify-content:space-between; align-items:center; }
-.why-pill{ font-size:10.5px; letter-spacing:0.04em; font-weight:600; }
-body[data-theme="dark"] .why-pill{ color:var(--acid); }
-body[data-theme="light"] .why-pill{ background:var(--acid); color:var(--acid-ink); padding:3px 9px; border-radius:20px; }
+.why-card{ border-radius:12px; border:1px solid; padding:12px 14px; margin:0 0 18px; max-width:560px; }
+body[data-theme="dark"] .why-card{ border-color:rgba(238,234,225,0.18); }
+body[data-theme="light"] .why-card{ border-color:rgba(5,6,6,0.16); }
+.why-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.why-pill{ font-size:10.5px; letter-spacing:0.06em; font-weight:600; text-transform:uppercase; opacity:0.5; }
 .why-chevron{ transition:transform 0.2s ease; opacity:0.5; flex-shrink:0; }
-.why-card.expanded .why-chevron{ transform:rotate(180deg); }
-.why-body{ max-height:0; overflow:hidden; transition:max-height 0.25s ease, margin-top 0.25s ease; margin-top:0; }
-.why-card.expanded .why-body{ max-height:220px; margin-top:12px; }
-.why-item{ display:flex; gap:9px; margin-bottom:10px; font-size:12.5px; line-height:1.55; opacity:0.68; }
+.why-body{ margin-top:14px; }
+.why-item{ display:flex; gap:9px; margin-bottom:10px; font-size:12.5px; line-height:1.55; opacity:0.7; }
 .why-item:last-child{ margin-bottom:0; }
-.why-item svg{ flex-shrink:0; margin-top:1px; opacity:0.7; }
+.why-item svg{ flex-shrink:0; margin-top:2px; opacity:0.7; }
 
-/* compose */
-.compose-card{ border-radius:16px; padding:16px; margin-bottom:16px; max-width:560px; }
-body[data-theme="dark"] .compose-card{ background:rgba(238,234,225,0.05); }
-body[data-theme="light"] .compose-card{ background:rgba(5,6,6,0.05); }
-.compose-q{ font-size:19px; font-family:'Instrument Serif', serif; line-height:1.35; margin:0 0 12px; }
-.compose-box{
+.btn-primary{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px; cursor:pointer;
+  font-family:'Instrument Sans', sans-serif; padding:13px 20px; border-radius:9px; border:none;
+  font-size:13.5px; font-weight:600;
+}
+body[data-theme="dark"] .btn-primary{ background:var(--cream); color:var(--dark-bg); }
+body[data-theme="light"] .btn-primary{ background:var(--dark-bg); color:var(--cream); }
+.btn-ghost{
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer; background:transparent; color:inherit;
+  font-family:'Instrument Sans', sans-serif; padding:11px 16px; border-radius:9px; border:1px solid;
+  font-size:13px; font-weight:600;
+}
+body[data-theme="dark"] .btn-ghost{ border-color:rgba(238,234,225,0.28); }
+body[data-theme="light"] .btn-ghost{ border-color:rgba(5,6,6,0.22); }
+.read-more-btn{ margin:2px 0 20px; }
+.read-more-btn svg{ transition:transform 0.2s ease; flex-shrink:0; }
+.reading-card.expanded .read-more-btn svg{ transform:rotate(180deg); }
+.reading-more{ max-height:0; overflow:hidden; transition:max-height 0.5s ease; max-width:560px; }
+.reading-card.expanded .reading-more{ max-height:1600px; }
+.home-spine-head{ margin:6px 0 14px; }
+.hsh-label{ font-size:11px; letter-spacing:0.04em; opacity:0.55; margin:0; }
+.home-spine .pass{ padding-bottom:16px; }
+.home-spine .pass-quote{ font-size:14px; margin-bottom:0; }
+
+.plus-strip{ border-top:1px dashed; padding-top:16px; margin:2px 0 20px; max-width:560px; }
+body[data-theme="dark"] .plus-strip{ border-color:rgba(238,234,225,0.16); }
+body[data-theme="light"] .plus-strip{ border-color:rgba(5,6,6,0.14); }
+.plus-title{ font-size:12.5px; font-weight:600; margin:0 0 8px; }
+.plus-list{ margin:0 0 12px; padding:0; list-style:none; }
+.plus-list li{ font-size:12px; line-height:1.6; opacity:0.68; padding-left:14px; position:relative; }
+.plus-list li::before{ content:"·"; position:absolute; left:3px; }
+.plus-note{ font-size:11.5px; opacity:0.55; margin:10px 0 0; line-height:1.55; max-width:440px; }
+
+/* ---------- céu ---------- */
+.sky-line{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:8px; }
+.sky-line .sname{ font-size:14px; font-weight:500; }
+.sky-line .smeta{ font-size:11.5px; opacity:0.5; text-align:right; }
+.sky-caption{ font-size:11.5px; opacity:0.58; margin:0; line-height:1.55; }
+
+.orb{ margin:14px 0 10px; }
+.orb-track{ position:relative; height:3px; border-radius:2px; margin:0 0 8px; }
+body[data-theme="dark"] .orb-track{ background:rgba(238,234,225,0.14); }
+body[data-theme="light"] .orb-track{ background:rgba(5,6,6,0.13); }
+.orb-exact{ position:absolute; top:-4px; left:66%; width:1.5px; height:11px; }
+body[data-theme="dark"] .orb-exact{ background:rgba(238,234,225,0.45); }
+body[data-theme="light"] .orb-exact{ background:rgba(5,6,6,0.4); }
+.orb-now{ position:absolute; top:-3.5px; left:52%; width:10px; height:10px; border-radius:50%; background:currentColor; transform:translateX(-50%); }
+body[data-theme="light"] .orb-now{ background:var(--dark-bg); }
+.orb-labels{ display:flex; justify-content:space-between; font-size:10.5px; opacity:0.5; }
+.orb-status{ font-size:12px; margin:0 0 2px; }
+.orb-status b{ font-weight:600; }
+
+.void-row{ display:flex; gap:9px; align-items:flex-start; font-size:12.5px; line-height:1.55; }
+.void-row svg{ flex-shrink:0; margin-top:2px; opacity:0.6; }
+.retro-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.chip{
+  font-size:11px; padding:5px 10px; border-radius:20px; border:1px solid; background:transparent; color:inherit;
+  font-family:'Instrument Sans', sans-serif;
+}
+body[data-theme="dark"] .chip{ border-color:rgba(238,234,225,0.2); }
+body[data-theme="light"] .chip{ border-color:rgba(5,6,6,0.16); }
+
+.progress-track{ height:3px; border-radius:2px; overflow:hidden; margin:0 0 10px; }
+body[data-theme="dark"] .progress-track{ background:rgba(238,234,225,0.12); }
+body[data-theme="light"] .progress-track{ background:rgba(5,6,6,0.12); }
+.progress-fill{ height:100%; background:currentColor; opacity:0.6; }
+body[data-theme="light"] .progress-fill{ background:var(--dark-bg); }
+
+.cycles-more{ max-height:0; overflow:hidden; transition:max-height 0.3s ease, margin-top 0.3s ease; margin-top:0; }
+.cycles-more.open{ max-height:320px; margin-top:14px; }
+.cycle-row{ padding:11px 0; border-top:1px solid; }
+body[data-theme="dark"] .cycle-row{ border-color:rgba(238,234,225,0.1); }
+body[data-theme="light"] .cycle-row{ border-color:rgba(5,6,6,0.09); }
+
+.tech-footer{ font-size:10.5px; opacity:0.42; margin:14px 0 0; line-height:1.5; }
+
+/* ---------- compose / decisões ---------- */
+/* ---------- blocos da home reorganizados ---------- */
+.mine-block{ max-width:560px; margin-bottom:20px; }
+.mine-block .group-label{ margin-bottom:14px; }
+
+.timeline-block .tb-lead{ font-size:12.5px; opacity:0.68; line-height:1.6; margin:0 0 18px; max-width:520px; }
+.timeline-block .btn-ghost{ margin-top:4px; }
+.tb-cold-note{ display:none; font-size:11.5px; opacity:0.55; line-height:1.6; margin:10px 0 0; max-width:500px; }
+.tb-cold-note.show{ display:block; }
+
+/* céu hoje — versão enxuta */
+.sky-primary{ font-size:16px; font-weight:600; margin:0 0 6px; }
+.sky-secondary{ font-size:13px; opacity:0.7; line-height:1.6; margin:0 0 6px; max-width:520px; }
+.sky-facts{ display:flex; flex-direction:column; }
+.sky-facts .fact{ display:flex; gap:12px; padding:9px 0; border-top:1px solid; font-size:12.5px; line-height:1.5; }
+body[data-theme="dark"] .sky-facts .fact{ border-color:rgba(238,234,225,0.09); }
+body[data-theme="light"] .sky-facts .fact{ border-color:rgba(5,6,6,0.08); }
+.sky-facts .fact:first-child{ border-top:none; }
+.sky-facts .fk{ width:112px; flex-shrink:0; opacity:0.5; }
+.sky-facts .fv{ flex:1; }
+
+
+/* ---------- arquivo acumulado (topo da home) ---------- */
+.archive-card{
+  background:var(--dark-bg); color:var(--cream);
+  border-radius:14px; padding:14px 16px; margin:14px 0 22px; max-width:560px;
+}
+body[data-theme="dark"] .archive-card{ background:#101210; border:1px solid rgba(238,234,225,0.12); }
+.ac-top{ display:flex; align-items:baseline; gap:8px; margin-bottom:11px; flex-wrap:wrap; }
+.ac-num{ font-size:26px; line-height:1; margin:0; color:var(--cream); }
+.ac-sub{ font-size:11.5px; color:rgba(238,234,225,0.55); margin:0; }
+.ac-strip{ display:flex; gap:2px; align-items:flex-end; height:20px; }
+.ac-strip i{ flex:1; border-radius:1px; background:rgba(238,234,225,0.22); display:block; }
+.ac-strip i.on{ background:rgba(238,234,225,0.45); }
+.ac-strip i.now{ background:var(--acid); }
+
+/* ---------- compose feature (peça escura fixa) ---------- */
+.compose-feature{
+  background:var(--dark-bg); color:var(--cream);
+  border-radius:18px; padding:22px 20px 20px; margin:0 0 20px; max-width:560px;
+}
+body[data-theme="dark"] .compose-feature{
+  background:#101210; border:1px solid rgba(238,234,225,0.18);
+}
+.cf-eyebrow{ font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(238,234,225,0.5); margin:0 0 12px; }
+.cf-q{ font-size:23px; line-height:1.3; margin:0 0 10px; color:var(--cream); }
+.cf-because{ font-size:12px; line-height:1.6; color:rgba(238,234,225,0.5); margin:0 0 18px; }
+
+.cf-track{ display:flex; align-items:center; gap:10px; cursor:pointer; margin:2px 0 0; user-select:none; }
+.cf-track input{ position:absolute; opacity:0; width:0; height:0; }
+.cf-check{
+  width:18px; height:18px; border-radius:5px; flex-shrink:0;
+  border:1px solid rgba(238,234,225,0.35); display:flex; align-items:center; justify-content:center;
+  color:transparent; transition:background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.cf-track input:checked + .cf-check{ background:var(--cream); border-color:var(--cream); color:var(--dark-bg); }
+.cf-track input:focus-visible + .cf-check{ outline:2px solid var(--acid); outline-offset:2px; }
+.cf-track-text{ font-size:13px; color:rgba(238,234,225,0.8); }
+.cf-track-note{
+  font-size:11.5px; color:rgba(238,234,225,0.7); margin:0; padding-left:28px;
+  max-height:0; overflow:hidden; opacity:0;
+  transition:max-height 0.2s ease, opacity 0.2s ease, margin 0.2s ease;
+}
+.cf-track-note.show{ max-height:40px; opacity:0.85; margin:6px 0 0; }
+
+.cf-dest{ font-size:11px; line-height:1.55; color:rgba(238,234,225,0.42); margin:12px 0 0; }
+.cf-box{
+  width:100%; border-radius:12px; padding:14px; min-height:88px; resize:none; display:block;
+  background:rgba(238,234,225,0.06); border:1px solid rgba(238,234,225,0.16); color:var(--cream);
+  font-family:'Instrument Sans', sans-serif; font-size:14px; line-height:1.6; margin-bottom:16px;
+}
+.cf-box::placeholder{ color:rgba(238,234,225,0.4); }
+.cf-box:focus{ outline:none; border-color:var(--acid); outline-offset:0; }
+.cf-actions{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:18px; }
+.cf-save{
+  background:var(--acid); color:var(--acid-ink); border:none; border-radius:10px; padding:12px 20px;
+  font-size:14px; font-weight:600; cursor:pointer; font-family:'Instrument Sans', sans-serif;
+}
+.cf-save:active{ opacity:0.8; }
+.cf-msg{ color:rgba(238,234,225,0.75) !important; text-align:left; }
+
+.compose-q{ font-size:19px; font-family:'Fraunces', Georgia, serif; line-height:1.35; margin:0 0 12px; }
+.compose-box, .reflect-box{
   border-radius:10px; padding:12px; margin-bottom:10px;
   font-family:'Instrument Sans', sans-serif; font-size:14px; width:100%;
   border:1px solid; resize:none; min-height:60px; display:block;
 }
-body[data-theme="dark"] .compose-box{ background:rgba(5,6,6,0.6); border-color:rgba(238,234,225,0.14); color:var(--cream); }
-body[data-theme="light"] .compose-box{ background:var(--light-input); border-color:rgba(5,6,6,0.13); color:var(--dark-bg); }
-.compose-box::placeholder{ opacity:0.4; font-family:'Instrument Sans', sans-serif; }
+body[data-theme="dark"] .compose-box, body[data-theme="dark"] .reflect-box{ background:rgba(5,6,6,0.6); border-color:rgba(238,234,225,0.14); color:var(--cream); }
+body[data-theme="light"] .compose-box, body[data-theme="light"] .reflect-box{ background:var(--light-input); border-color:rgba(5,6,6,0.13); color:var(--dark-bg); }
+.compose-box::placeholder, .reflect-box::placeholder{ opacity:0.4; }
 .save-btn{
   border-radius:10px; padding:12px; text-align:center; font-size:14px; font-weight:600;
   border:none; width:100%; cursor:pointer; font-family:'Instrument Sans', sans-serif;
-  transition:opacity 0.15s ease;
 }
 body[data-theme="dark"] .save-btn{ background:var(--acid); color:var(--acid-ink); }
 body[data-theme="light"] .save-btn{ background:var(--dark-bg); color:var(--cream); }
 .save-btn:active{ opacity:0.75; }
 .save-msg{ font-size:12px; text-align:center; margin:9px 0 0; opacity:0; transition:opacity 0.2s ease; }
-body[data-theme="dark"] .save-msg{ color:var(--acid); }
-body[data-theme="light"] .save-msg{ color:var(--dark-bg); font-weight:600; }
-.save-msg.show{ opacity:0.85; }
+.save-msg.show{ opacity:0.8; }
 
-/* decisions summary (home) */
-.decisions-summary{
-  border-radius:14px; padding:14px 16px; margin-bottom:24px; max-width:560px;
-  display:flex; justify-content:space-between; align-items:center; cursor:pointer;
-}
-body[data-theme="dark"] .decisions-summary{ background:rgba(238,234,225,0.045); }
-body[data-theme="light"] .decisions-summary{ background:rgba(5,6,6,0.045); }
-.decisions-summary .d-title{ font-size:13.5px; font-weight:600; margin:0 0 3px; }
-.decisions-summary .d-sub{ font-size:11.5px; opacity:0.5; margin:0; }
+.decisions-head{ display:flex; justify-content:space-between; align-items:center; cursor:pointer; gap:10px; }
+.decisions-head .d-title{ font-size:13.5px; font-weight:600; margin:0 0 3px; }
+.decisions-head .d-sub{ font-size:11.5px; opacity:0.5; margin:0; }
+.decisions-chevron{ transition:transform 0.2s ease; opacity:0.5; flex-shrink:0; }
+.decisions-card.expanded .decisions-chevron{ transform:rotate(180deg); }
+.decisions-body{ max-height:0; overflow:hidden; transition:max-height 0.3s ease, margin-top 0.3s ease; margin-top:0; }
+.decisions-card.expanded .decisions-body{ max-height:320px; margin-top:14px; }
+.decision-mini{ padding:11px 0; border-top:1px solid; cursor:pointer; }
+body[data-theme="dark"] .decision-mini{ border-color:rgba(238,234,225,0.1); }
+body[data-theme="light"] .decision-mini{ border-color:rgba(5,6,6,0.09); }
+.decision-mini:first-child{ border-top:none; padding-top:0; }
+.decision-mini-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; gap:8px; }
+.decision-mini-top .name{ font-size:13.5px; font-weight:500; }
+.decision-mini-note{ font-size:11.5px; opacity:0.55; margin:0; }
 
-/* section titles */
-.section-title{ font-size:17px; font-weight:600; margin:0 0 4px; }
-.section-sub{ font-size:12.5px; opacity:0.5; margin:0 0 14px; }
+.callback-card{ padding-left:12px; border-left:2px solid currentColor; max-width:560px; }
+body[data-theme="light"] .callback-card{ border-left-color:var(--dark-bg); }
+.callback-top{ display:flex; align-items:center; gap:7px; margin-bottom:10px; font-size:11px; letter-spacing:0.03em; opacity:0.65; }
+.callback-quote{ font-size:15px; line-height:1.6; margin:0 0 8px; font-style:italic; }
+.callback-meta{ font-size:11.5px; opacity:0.5; margin:0 0 8px; }
+.icon-text-btn{ display:inline-flex; align-items:center; gap:5px; background:none; border:none; cursor:pointer; font-size:11.5px; opacity:0.75; color:inherit; padding:0; font-family:'Instrument Sans', sans-serif; }
 
-/* decision cards / list */
+/* ---------- lista de decisões ---------- */
 .decision-card{
   border-radius:14px; padding:14px; margin-bottom:10px; border:1px solid; cursor:pointer; max-width:560px;
   transition:border-color 0.15s ease;
 }
 body[data-theme="dark"] .decision-card{ border-color:rgba(238,234,225,0.18); }
 body[data-theme="light"] .decision-card{ border-color:rgba(5,6,6,0.16); }
-.decision-card:hover{ border-color:var(--acid); }
-.decision-card-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
+body[data-theme="dark"] .decision-card:hover{ border-color:rgba(238,234,225,0.5); }
+body[data-theme="light"] .decision-card:hover{ border-color:rgba(5,6,6,0.5); }
+.decision-card-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:10px; }
 .decision-card-top .name{ font-size:14.5px; font-weight:500; }
-.decision-card-top .age{ font-size:11.5px; opacity:0.45; }
+.decision-card-top .age{ font-size:11.5px; opacity:0.45; white-space:nowrap; }
 .decision-note{ font-size:12.5px; opacity:0.6; margin:0 0 8px; line-height:1.5; }
-.status-pill{ font-size:11px; padding:3px 9px; border-radius:20px; display:inline-block; }
-.status-pill.waiting{ background:rgba(215,250,44,0.16); color:#aacc2a; }
+.status-pill{ font-size:11px; padding:3px 9px; border-radius:20px; display:inline-block; white-space:nowrap; }
+body[data-theme="dark"] .status-pill.waiting{ background:rgba(238,234,225,0.12); color:rgba(238,234,225,0.85); }
 body[data-theme="light"] .status-pill.waiting{ background:rgba(5,6,6,0.08); color:var(--dark-bg); }
 .status-pill.progress{ opacity:0.6; }
 body[data-theme="dark"] .status-pill.progress{ background:rgba(238,234,225,0.1); }
 body[data-theme="light"] .status-pill.progress{ background:rgba(5,6,6,0.08); }
-
 .add-decision{
-  border-radius:14px; padding:14px; text-align:center; border:1px dashed; cursor:pointer; opacity:0.7; max-width:560px;
+  border-radius:14px; padding:14px; text-align:center; border:1px dashed; cursor:pointer; opacity:0.75; max-width:560px;
+  font-size:13.5px;
 }
-body[data-theme="dark"] .add-decision{ border-color:rgba(238,234,225,0.25); color:var(--acid); }
+body[data-theme="dark"] .add-decision{ border-color:rgba(238,234,225,0.25); color:var(--cream); }
 body[data-theme="light"] .add-decision{ border-color:rgba(5,6,6,0.22); color:var(--dark-bg); }
+.closed-toggle{ margin-top:18px; font-size:12.5px; opacity:0.6; cursor:pointer; text-decoration:underline; display:inline-block; }
+.closed-list{ max-height:0; overflow:hidden; transition:max-height 0.3s ease; max-width:560px; }
+.closed-list.open{ max-height:400px; margin-top:12px; }
+.closed-row{ display:flex; justify-content:space-between; gap:10px; padding:10px 0; border-top:1px solid; font-size:12.5px; }
+body[data-theme="dark"] .closed-row{ border-color:rgba(238,234,225,0.1); }
+body[data-theme="light"] .closed-row{ border-color:rgba(5,6,6,0.09); }
+.closed-row .out{ opacity:0.55; white-space:nowrap; }
 
-/* decision detail */
+/* ---------- detalhe da decisão ---------- */
 .detail-view{ display:none; }
 .detail-view.active{ display:block; }
-.back-row{ display:flex; align-items:center; gap:8px; margin-bottom:18px; cursor:pointer; font-size:13.5px; opacity:0.6; width:fit-content; }
+.back-row{ display:flex; align-items:center; gap:8px; margin-bottom:18px; cursor:pointer; font-size:13.5px; opacity:0.6; width:fit-content; background:none; border:none; color:inherit; font-family:'Instrument Sans', sans-serif; padding:0; }
 .detail-tag{ font-size:12.5px; font-weight:600; margin:0 0 10px; }
-body[data-theme="dark"] .detail-tag{ color:var(--acid); }
-.detail-question{ font-size:21px; line-height:1.4; font-family:'Instrument Serif', serif; margin:0 0 16px; max-width:560px; }
-.quote-box{ border-radius:12px; padding:14px; margin-bottom:16px; max-width:560px; }
+body[data-theme="dark"] .detail-tag{ color:rgba(238,234,225,0.55); }
+.detail-question{ font-size:21px; line-height:1.4; font-family:'Fraunces', Georgia, serif; margin:0 0 16px; max-width:560px; }
+.quote-box{ border-radius:12px; padding:14px; margin-bottom:14px; max-width:560px; }
 body[data-theme="dark"] .quote-box{ background:rgba(238,234,225,0.06); }
 body[data-theme="light"] .quote-box{ background:rgba(5,6,6,0.05); }
 .quote-label{ font-size:11.5px; opacity:0.5; margin:0 0 6px; }
-.quote-text{ font-size:14px; line-height:1.6; margin:0; font-style:italic; }
+.quote-text{ font-size:14px; line-height:1.6; margin:0 0 10px; font-style:italic; }
+.quote-context{ font-size:11.5px; opacity:0.5; margin:0; }
 .outcomes{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; max-width:400px; }
 .outcome-btn{
   border-radius:10px; padding:12px; text-align:center; font-size:13.5px; border:1px solid; cursor:pointer;
   font-family:'Instrument Sans', sans-serif; background:transparent; color:inherit;
-  transition:background 0.15s ease, border-color 0.15s ease;
 }
 body[data-theme="dark"] .outcome-btn{ border-color:rgba(238,234,225,0.2); }
 body[data-theme="light"] .outcome-btn{ border-color:rgba(5,6,6,0.18); }
-.outcome-btn.selected{ background:var(--acid); border-color:var(--acid); color:var(--acid-ink); font-weight:600; }
-.detail-footnote{ font-size:11.5px; opacity:0.45; margin:14px 0 0; max-width:400px; line-height:1.5; }
+body[data-theme="dark"] .outcome-btn.selected{ background:var(--cream); border-color:var(--cream); color:var(--dark-bg); font-weight:600; }
+body[data-theme="light"] .outcome-btn.selected{ background:var(--dark-bg); border-color:var(--dark-bg); color:var(--cream); font-weight:600; }
+.reflect{ max-height:0; overflow:hidden; transition:max-height 0.3s ease; max-width:400px; }
+.reflect.open{ max-height:280px; margin-bottom:10px; }
+.reflect-q{ font-size:13px; margin:6px 0 8px; opacity:0.8; }
+.detail-footnote{ font-size:11.5px; opacity:0.5; margin:14px 0 0; max-width:420px; line-height:1.55; }
 
-/* cycles */
-.cycle-card{ border-radius:14px; padding:16px; margin-bottom:12px; max-width:560px; }
-body[data-theme="dark"] .cycle-card{ border:1px solid rgba(238,234,225,0.16); }
-body[data-theme="light"] .cycle-card{ border:1px solid rgba(5,6,6,0.14); }
-.cycle-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:9px; }
-.cycle-top .cname{ font-size:14.5px; font-weight:500; }
-.cycle-top .cmeta{ font-size:11.5px; opacity:0.45; }
-.progress-track{ height:3px; border-radius:2px; overflow:hidden; margin-bottom:10px; }
-body[data-theme="dark"] .progress-track{ background:rgba(238,234,225,0.12); }
-body[data-theme="light"] .progress-track{ background:rgba(5,6,6,0.12); }
-.progress-fill{ height:100%; background:var(--acid); }
-body[data-theme="light"] .progress-fill{ background:var(--dark-bg); }
-.cycle-desc{ font-size:12.5px; opacity:0.6; line-height:1.6; margin:0; }
-.cycle-mini{ display:flex; justify-content:space-between; align-items:center; padding:13px 15px; border-radius:12px; margin-bottom:10px; font-size:12.5px; max-width:560px; }
-body[data-theme="dark"] .cycle-mini{ background:rgba(238,234,225,0.04); }
-body[data-theme="light"] .cycle-mini{ background:rgba(5,6,6,0.04); }
-.cycle-mini .label{ opacity:0.85; }
-.cycle-mini .when{ opacity:0.45; }
+/* ---------- padrões ---------- */
+.pattern-card{ border-radius:14px; padding:16px; margin-bottom:12px; max-width:560px; border:1px solid; }
+body[data-theme="dark"] .pattern-card{ border-color:rgba(238,234,225,0.14); }
+body[data-theme="light"] .pattern-card{ border-color:rgba(5,6,6,0.12); }
+.pattern-card.thin{ opacity:0.62; border-style:dashed; }
+.pattern-top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:4px; }
+.pattern-title{ font-size:14px; font-weight:600; margin:0; }
+.pattern-n{ font-size:10.5px; opacity:0.5; white-space:nowrap; }
+.pattern-sub{ font-size:12px; opacity:0.55; margin:0 0 14px; line-height:1.5; }
+.bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:7px; font-size:12px; }
+.bar-row .bl{ width:82px; flex-shrink:0; opacity:0.75; }
+.bar-row .bt{ flex:1; height:8px; border-radius:2px; overflow:hidden; }
+body[data-theme="dark"] .bar-row .bt{ background:rgba(238,234,225,0.1); }
+body[data-theme="light"] .bar-row .bt{ background:rgba(5,6,6,0.08); }
+.bar-row .bf{ height:100%; background:currentColor; opacity:0.65; }
+body[data-theme="light"] .bar-row .bf{ background:var(--dark-bg); }
+.bar-row .bn{ width:22px; text-align:right; opacity:0.6; flex-shrink:0; }
+.pattern-note{ font-size:11.5px; opacity:0.55; margin:12px 0 0; line-height:1.55; }
+.duo{ display:flex; gap:12px; }
+.duo > div{ flex:1; }
+.duo .dn{ font-size:22px; font-weight:600; display:block; margin-bottom:3px; }
+.duo .dl{ font-size:11px; opacity:0.55; line-height:1.4; display:block; }
+.word-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-top:1px solid; font-size:13px; cursor:pointer; }
+body[data-theme="dark"] .word-row{ border-color:rgba(238,234,225,0.1); }
+body[data-theme="light"] .word-row{ border-color:rgba(5,6,6,0.09); }
+.word-row:first-of-type{ border-top:none; }
+.word-row .wc{ font-size:11.5px; opacity:0.5; }
+.archive-strip{ display:flex; gap:2px; align-items:flex-end; height:26px; margin:12px 0 8px; }
+.archive-strip div{ flex:1; border-radius:1px; }
+body[data-theme="dark"] .archive-strip div{ background:rgba(238,234,225,0.45); }
+body[data-theme="light"] .archive-strip div{ background:rgba(5,6,6,0.4); }
 
-/* historico */
+/* ---------- linha do trânsito ---------- */
+.transit-eyebrow{ font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; opacity:0.5; margin:0 0 8px; }
+.transit-title{ font-size:27px; line-height:1.2; margin:0 0 8px; max-width:520px; }
+.transit-meta{ font-size:12.5px; opacity:0.6; margin:0 0 18px; line-height:1.6; max-width:520px; }
+.transit-stats{ display:flex; gap:14px; padding:16px 0; border-top:1px solid; border-bottom:1px solid; margin-bottom:16px; max-width:560px; }
+body[data-theme="dark"] .transit-stats{ border-color:rgba(238,234,225,0.12); }
+body[data-theme="light"] .transit-stats{ border-color:rgba(5,6,6,0.1); }
+.transit-stats > div{ flex:1; }
+.transit-stats .tn{ display:block; font-size:21px; font-weight:600; margin-bottom:3px; }
+.transit-stats .tl{ display:block; font-size:10.5px; opacity:0.55; line-height:1.4; }
+.transit-caveat{ font-size:11.5px; opacity:0.55; line-height:1.6; margin:0 0 22px; max-width:520px; }
+
+.spine{ position:relative; max-width:560px; }
+.spine::before{
+  content:""; position:absolute; left:5.5px; top:10px; bottom:14px; width:1px;
+}
+body[data-theme="dark"] .spine::before{ background:rgba(238,234,225,0.16); }
+body[data-theme="light"] .spine::before{ background:rgba(5,6,6,0.14); }
+
+.pass{ position:relative; padding:0 0 24px 26px; }
+.pass .dot{ position:absolute; left:0; top:4px; width:12px; height:12px; border-radius:50%; box-sizing:border-box; }
+body[data-theme="dark"] .pass .dot{ background:rgba(238,234,225,0.35); }
+body[data-theme="light"] .pass .dot{ background:rgba(5,6,6,0.32); }
+.pass.empty .dot{ width:8px; height:8px; left:2px; top:6px; background:transparent; border:1px solid; }
+body[data-theme="dark"] .pass.empty .dot{ border-color:rgba(238,234,225,0.3); }
+body[data-theme="light"] .pass.empty .dot{ border-color:rgba(5,6,6,0.25); }
+.pass.today .dot{ background:var(--acid); box-shadow:0 0 0 4px rgba(215,250,44,0.18); }
+body[data-theme="light"] .pass.today .dot{ background:var(--dark-bg); box-shadow:0 0 0 4px rgba(5,6,6,0.1); }
+.pass.future .dot{ background:transparent; border:1px dashed; }
+body[data-theme="dark"] .pass.future .dot{ border-color:rgba(238,234,225,0.35); }
+body[data-theme="light"] .pass.future .dot{ border-color:rgba(5,6,6,0.3); }
+
+.pass-date{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:3px; }
+.pass-date .pd{ font-size:13.5px; font-weight:600; }
+.pass-date .pnow{ font-size:10px; font-weight:700; letter-spacing:0.06em; padding:2px 7px; border-radius:20px; }
+body[data-theme="dark"] .pass-date .pnow{ background:var(--cream); color:var(--dark-bg); }
+body[data-theme="light"] .pass-date .pnow{ background:var(--dark-bg); color:var(--cream); }
+.pass-tech{ font-size:11px; opacity:0.5; margin:0 0 9px; line-height:1.5; }
+.pass-quote{ font-size:15.5px; line-height:1.6; margin:0 0 9px; font-style:italic; }
+.pass.future .pass-quote, .pass.empty .pass-quote{ font-style:normal; font-size:13px; opacity:0.5; }
+.pass-tie{ display:inline-flex; align-items:center; gap:6px; font-size:11.5px; opacity:0.7; }
+.pass-tie svg{ flex-shrink:0; opacity:0.6; }
+.pass.empty{ opacity:0.62; }
+.echo{ font-style:normal; font-weight:600; border-bottom:2px solid var(--acid); padding-bottom:1px; }
+body[data-theme="light"] .echo{ border-bottom-color:rgba(5,6,6,0.4); }
+
+.deep-toggle{ font-size:12.5px; opacity:0.6; cursor:pointer; text-decoration:underline; display:inline-block; margin:2px 0 0 26px; }
+.deep-list{ max-height:0; overflow:hidden; transition:max-height 0.3s ease; max-width:560px; }
+.deep-list.open{ max-height:340px; margin-top:16px; }
+
+.echo-summary{ border-radius:14px; padding:16px; margin:22px 0 8px; max-width:560px; }
+body[data-theme="dark"] .echo-summary{ background:rgba(238,234,225,0.06); }
+body[data-theme="light"] .echo-summary{ background:rgba(5,6,6,0.045); }
+.echo-summary p{ margin:0 0 8px; font-size:13px; line-height:1.65; }
+.echo-summary p:last-child{ margin-bottom:0; }
+.transit-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+
+/* ---------- histórico ---------- */
+.filter-row{ display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:12px; -webkit-overflow-scrolling:touch; }
+.filter-chip{ white-space:nowrap; cursor:pointer; font-size:11.5px; padding:6px 12px; border-radius:20px; border:1px solid; background:transparent; color:inherit; font-family:'Instrument Sans', sans-serif; }
+body[data-theme="dark"] .filter-chip{ border-color:rgba(238,234,225,0.2); }
+body[data-theme="light"] .filter-chip{ border-color:rgba(5,6,6,0.16); }
+body[data-theme="dark"] .filter-chip.on{ background:var(--cream); border-color:var(--cream); color:var(--dark-bg); font-weight:600; }
+body[data-theme="light"] .filter-chip.on{ background:var(--dark-bg); border-color:var(--dark-bg); color:var(--cream); }
+.search-box{
+  width:100%; max-width:560px; padding:11px 13px; border-radius:10px; margin-bottom:14px; border:1px solid;
+  font-family:'Instrument Sans', sans-serif; font-size:13.5px;
+}
+body[data-theme="dark"] .search-box{ background:rgba(5,6,6,0.6); border-color:rgba(238,234,225,0.14); color:var(--cream); }
+body[data-theme="light"] .search-box{ background:var(--light-input); border-color:rgba(5,6,6,0.13); color:var(--dark-bg); }
 .timeline-item{ padding:14px 0; border-bottom:1px solid; max-width:560px; }
 body[data-theme="dark"] .timeline-item{ border-color:rgba(238,234,225,0.1); }
 body[data-theme="light"] .timeline-item{ border-color:rgba(5,6,6,0.09); }
-.timeline-item:last-child{ border-bottom:none; }
-.timeline-meta{ display:flex; justify-content:space-between; font-size:11.5px; opacity:0.48; margin:0 0 6px; }
-.timeline-quote{ font-size:14.5px; line-height:1.6; margin:0; font-family:'Instrument Serif', serif; font-style:italic; }
+.timeline-meta{ display:flex; justify-content:space-between; gap:10px; font-size:11.5px; opacity:0.48; margin:0 0 6px; }
+.timeline-quote{ font-size:14.5px; line-height:1.6; margin:0; font-family:'Fraunces', Georgia, serif; font-style:italic; }
 .timeline-item.highlight{ border-bottom:none; border-radius:10px; padding:14px; margin-bottom:6px; }
-body[data-theme="dark"] .timeline-item.highlight{ background:rgba(215,250,44,0.06); }
+body[data-theme="dark"] .timeline-item.highlight{ background:rgba(238,234,225,0.06); }
 body[data-theme="light"] .timeline-item.highlight{ background:rgba(5,6,6,0.04); }
+.empty-state{ font-size:13px; opacity:0.55; padding:24px 0; line-height:1.6; max-width:440px; display:none; }
+.empty-state.show{ display:block; }
 
-/* screens */
+/* ---------- screens / nav ---------- */
 .screens{ flex:1; min-height:0; position:relative; }
 .screen{
   position:absolute; inset:0;
   overflow-y:auto; -webkit-overflow-scrolling:touch;
-  padding:18px 20px calc(env(safe-area-inset-bottom,0px) + 24px);
-  opacity:0; pointer-events:none;
-  transform:translateY(6px);
+  padding:18px 20px calc(env(safe-area-inset-bottom,0px) + 28px);
+  opacity:0; pointer-events:none; transform:translateY(6px);
   transition:opacity 0.18s ease, transform 0.18s ease;
 }
 .screen.active{ opacity:1; pointer-events:auto; transform:translateY(0); }
 .screen[data-screen="hoje"]{ padding-top:0; }
 
-/* bottom nav */
 .bottom-nav{
   display:flex; justify-content:space-around; align-items:center;
   padding:12px 0 calc(env(safe-area-inset-bottom,0px) + 14px);
@@ -267,37 +508,55 @@ body[data-theme="dark"] .bottom-nav{ border-color:rgba(238,234,225,0.12); }
 body[data-theme="light"] .bottom-nav{ border-color:rgba(5,6,6,0.1); }
 .nav-btn{
   background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px;
-  cursor:pointer; opacity:0.42; font-family:'Instrument Sans', sans-serif; padding:2px 12px;
-  transition:opacity 0.15s ease; color:inherit;
+  cursor:pointer; opacity:0.42; font-family:'Instrument Sans', sans-serif; padding:2px 12px; color:inherit;
 }
 .nav-btn.active{ opacity:1; }
 body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
 .nav-btn span{ font-size:10.5px; font-weight:500; }
 
-/* onboarding overlay */
+/* ---------- overlays ---------- */
 .overlay{
   position:fixed; inset:0; background:rgba(10,10,10,0.6);
   display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
   backdrop-filter:blur(2px);
 }
 .overlay.show{ display:flex; }
-.onboard-card{
+.sheet{
   width:100%; max-width:380px; height:92vh; max-height:640px;
   background:var(--dark-bg); color:var(--cream); border-radius:26px;
   padding:26px 22px 22px; position:relative; overflow:hidden;
   box-shadow:0 30px 70px rgba(0,0,0,0.4);
 }
+body[data-theme="light"] .sheet.themed{ background:#ffffff; color:var(--dark-bg); }
 .overlay-close{
-  position:absolute; top:16px; right:18px; background:none; border:none; color:rgba(238,234,225,0.5);
+  position:absolute; top:16px; right:18px; background:none; border:none; color:inherit; opacity:0.5;
   font-size:22px; cursor:pointer; line-height:1; z-index:5;
 }
+.sheet-scroll{ overflow-y:auto; height:100%; padding-right:2px; }
+.set-group{ margin-bottom:22px; }
+.set-label{ font-size:10.5px; letter-spacing:0.06em; opacity:0.45; margin:0 0 10px; text-transform:uppercase; }
+.set-row{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-top:1px solid; font-size:13.5px; }
+.sheet .set-row{ border-color:rgba(238,234,225,0.12); }
+body[data-theme="light"] .sheet.themed .set-row{ border-color:rgba(5,6,6,0.1); }
+.set-row:first-of-type{ border-top:none; }
+.set-row select{
+  background:transparent; color:inherit; border:1px solid; border-radius:8px; padding:7px 9px;
+  font-family:'Instrument Sans', sans-serif; font-size:12.5px; border-color:rgba(238,234,225,0.22);
+}
+body[data-theme="light"] .sheet.themed select{ border-color:rgba(5,6,6,0.18); }
+.set-row select option{ color:#111; }
+.set-action{ background:none; border:none; color:inherit; font-family:'Instrument Sans', sans-serif; font-size:13.5px; cursor:pointer; text-align:left; padding:0; text-decoration:underline; opacity:0.85; }
+.set-hint{ font-size:11px; opacity:0.5; margin:6px 0 0; line-height:1.5; }
+.danger{ color:#ff8a8a; }
+
+/* onboarding */
 .ob-step{ display:none; height:100%; flex-direction:column; justify-content:space-between; }
 .ob-step.active{ display:flex; }
 .ob-progress{ display:flex; gap:5px; margin-bottom:22px; }
 .ob-progress div{ flex:1; height:2px; border-radius:2px; background:rgba(238,234,225,0.2); }
-.ob-progress div.done{ background:var(--acid); }
+.ob-progress div.done{ background:var(--cream); }
 .ob-word{ font-size:14px; letter-spacing:0.08em; margin:0 0 34px; opacity:0.9; }
-.ob-head{ font-size:23px; font-family:'Instrument Serif', serif; line-height:1.32; margin:0 0 12px; }
+.ob-head{ font-size:23px; font-family:'Fraunces', Georgia, serif; line-height:1.32; margin:0 0 12px; }
 .ob-body{ font-size:14px; line-height:1.65; opacity:0.62; margin:0 0 16px; }
 .ob-field{ border-bottom:1px solid rgba(238,234,225,0.2); padding:9px 0; margin-bottom:12px; }
 .ob-field .flabel{ font-size:10.5px; opacity:0.45; margin:0 0 3px; }
@@ -311,11 +570,21 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
 .ob-textarea::placeholder{ opacity:0.35; }
 .ob-btn{
   background:var(--acid); color:var(--acid-ink); border:none; border-radius:10px; padding:13px;
-  font-size:14.5px; font-weight:600; text-align:center; cursor:pointer; width:100%; font-family:'Instrument Sans', sans-serif;
-  margin-top:14px;
+  font-size:14.5px; font-weight:600; text-align:center; cursor:pointer; width:100%;
+  font-family:'Instrument Sans', sans-serif; margin-top:14px;
 }
-.ob-skip{ text-align:center; font-size:12.5px; opacity:0.4; margin:11px 0 0; cursor:pointer; }
+.ob-skip{ text-align:center; font-size:12.5px; opacity:0.4; margin:11px 0 0; cursor:pointer; background:none; border:none; color:inherit; width:100%; font-family:'Instrument Sans', sans-serif; }
 .ob-scroll{ overflow-y:auto; flex:1; }
+.back-chips{ display:flex; flex-wrap:wrap; gap:7px; margin:14px 0 10px; }
+.back-chip{
+  font-size:12.5px; padding:9px 13px; border-radius:20px; border:1px solid rgba(238,234,225,0.22);
+  background:transparent; color:var(--cream); cursor:pointer; font-family:'Instrument Sans', sans-serif;
+}
+.back-chip.on{ background:var(--cream); border-color:var(--cream); color:var(--dark-bg); font-weight:600; }
+.back-when{ display:none; align-items:center; gap:8px; font-size:12px; opacity:0.6; margin-top:4px; }
+.back-when.show{ display:flex; }
+.back-when select{ background:transparent; color:var(--cream); border:1px solid rgba(238,234,225,0.22); border-radius:8px; padding:6px 8px; font-family:'Instrument Sans', sans-serif; font-size:12px; }
+.back-when select option{ color:#111; }
 
 /* password gate */
 #gate{
@@ -333,7 +602,6 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
   color:var(--cream); font-family:'Instrument Sans', sans-serif; font-size:14px;
 }
 .gate-input::placeholder{ color:rgba(238,234,225,0.35); }
-.gate-input:focus{ outline:none; border-color:var(--acid); }
 .gate-btn{
   width:100%; padding:13px; border-radius:10px; border:none; cursor:pointer;
   background:var(--acid); color:var(--acid-ink); font-weight:600; font-size:14px;
@@ -343,7 +611,7 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
 .gate-error.show{ opacity:1; }
 </style>
 </head>
-<body data-theme="dark">
+<body data-theme="light">
 
 <div id="gate">
   <div class="gate-box">
@@ -356,8 +624,9 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
   </div>
 </div>
 
-<!-- HOJE -->
 <div class="screens">
+
+<!-- ============ HOJE ============ -->
 <section class="screen active" data-screen="hoje">
   <div class="app-header">
     <div>
@@ -365,105 +634,234 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
       <p class="brand-sig isf">da Claudia</p>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" id="settingsBtn" aria-label="Configurações">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+      <button class="theme-switch" id="themeSwitch" aria-label="Alternar modo claro e escuro">
+        <span class="knob"></span>
+        <svg class="ts-sun" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2M12 20.5v2M2.5 12h-2M23.5 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+        <svg class="ts-moon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/></svg>
       </button>
-      <div class="avatar isn">C</div>
+      <button class="avatar isn" id="avatarBtn" aria-label="Abrir ajustes">C</button>
     </div>
   </div>
 
-  <div class="settings-menu" id="settingsMenu">
-    <div class="settings-row isn">
-      <span>Modo escuro</span>
-      <button class="theme-switch" id="themeSwitch" aria-label="Alternar tema"><span class="knob"></span></button>
+  <!-- arquivo acumulado (streak B2) -->
+  <div class="archive-card">
+    <div class="ac-top">
+      <p class="ac-num isf" id="acNum">142</p>
+      <p class="ac-sub isn" id="acSub">registros desde março · sem sequência a manter</p>
     </div>
-    <div class="settings-divider"></div>
-    <div class="settings-row settings-link isn" id="onboardTrigger">Ver onboarding (dia 1)</div>
-  </div>
-
-  <div class="trail-card">
-    <div class="trail-top isn">
-      <span class="muted">sua trilha</span>
-      <span>142 registros desde março</span>
-    </div>
-    <div class="trail-bars">
-      <div class="bar-empty" style="height:7px"></div>
-      <div class="bar-fill" style="height:13px"></div>
-      <div class="bar-fill" style="height:18px"></div>
-      <div class="bar-empty" style="height:7px"></div>
-      <div class="bar-fill" style="height:11px"></div>
-      <div class="bar-fill" style="height:16px"></div>
-      <div class="bar-empty" style="height:7px"></div>
-      <div class="bar-fill" style="height:20px"></div>
-      <div class="bar-empty" style="height:7px"></div>
-      <div class="bar-fill" style="height:14px"></div>
-      <div class="bar-fill" style="height:9px"></div>
-      <div class="bar-empty" style="height:7px"></div>
-      <div class="bar-fill" style="height:17px"></div>
-      <div class="bar-today" style="height:20px"></div>
+    <div class="ac-strip" id="acStrip">
+      <i class="on" style="height:45%"></i><i class="on" style="height:70%"></i><i style="height:16%"></i>
+      <i class="on" style="height:88%"></i><i class="on" style="height:52%"></i><i style="height:16%"></i>
+      <i class="on" style="height:64%"></i><i class="on" style="height:96%"></i><i style="height:16%"></i>
+      <i class="on" style="height:58%"></i><i class="on" style="height:38%"></i><i style="height:16%"></i>
+      <i class="on" style="height:76%"></i><i class="now" style="height:100%"></i>
     </div>
   </div>
 
-  <p class="reading-date isn">sábado, 22 de agosto</p>
-  <p class="reading-head isf">A lua passa hoje pela sua vênus. Você tende a confundir isso com urgência.</p>
-  <p class="reading-body isn">Aconteceu quatro vezes desde março. Em três delas você escreveu no mesmo dia sobre querer resolver alguma coisa rápido — e em duas, depois, marcou o desfecho como <strong>"foi misto"</strong>. Não é aviso. É só um padrão que aparece quando alguém olha por tempo suficiente.</p>
+  <!-- leitura do dia -->
+  <div class="reading-card" id="readingCard">
+    <p class="reading-date isn">sábado, 22 de agosto</p>
+    <p class="reading-head isf">A lua passa hoje pela sua vênus. Nas quatro vezes anteriores, você escreveu sobre pressa.</p>
+    <p class="reading-body isn">Aconteceu quatro vezes desde março. Em três delas você escreveu no mesmo dia sobre querer resolver alguma coisa rápido — e em duas, depois, marcou o desfecho como <strong>"foi misto"</strong>. Quatro ainda é pouco para chamar de padrão. É só uma coincidência que já apareceu vezes suficientes para valer a pena olhar.</p>
 
-  <div class="why-card isn" id="whyCard">
-    <div class="why-top">
-      <span class="why-pill">por que você recebeu isso</span>
-      <svg class="why-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-    <div class="why-body">
-      <div class="why-item">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
-        <span>Lua a 9°14' de peixes, conjunta sua vênus natal a 9°02' — do seu mapa, não do seu signo</span>
+    <div class="why-card isn expanded" id="whyCard">
+      <div class="why-top">
+        <span class="why-pill">por que você recebeu isso</span>
       </div>
-      <div class="why-item">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
-        <span>4 registros seus em trânsitos iguais, entre março e agosto</span>
-      </div>
-      <div class="why-item">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h6a4 4 0 0 1 4 4v6"/></svg>
-        <span>2 decisões que você marcou como desfecho misto</span>
+      <div class="why-body">
+        <div class="why-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Lua a 9°14' de Peixes, aplicando à sua vênus natal a 9°02' — do seu mapa, não do seu signo</span>
+        </div>
+        <div class="why-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+          <span>4 registros seus em trânsitos iguais, entre março e agosto</span>
+        </div>
+        <div class="why-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h6a4 4 0 0 1 4 4v6"/></svg>
+          <span>2 decisões que você marcou como desfecho misto</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="compose-card">
-    <p class="compose-q">Tem alguma coisa que você quer resolver rápido hoje?</p>
-    <textarea class="compose-box isn" placeholder="Escreva algumas linhas…"></textarea>
-    <button class="save-btn" onclick="saveEntry(this)">Salvar</button>
-    <p class="save-msg isn">Registrado. Isso fica só com você.</p>
-  </div>
+    <button class="btn-primary read-more-btn isn" onclick="toggleReading()">
+      <span id="readMoreLabel">Ler seu panorama completo</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
 
-  <div class="decisions-summary" onclick="goTab('decisoes')">
-    <div>
-      <p class="d-title isn">2 decisões esperando desfecho</p>
-      <p class="d-sub isn">a mais antiga tem 2 meses</p>
+    <div class="reading-more" id="readingMore">
+      <p class="reading-body isn">No seu mapa, essa configuração cai na casa 8 — vínculos e recursos que você divide com alguém, não só dinheiro. Ajuda a explicar por que, das quatro vezes, duas foram sobre trabalho e uma foi exatamente "mudar de cidade", que segue aberta.</p>
+      <p class="reading-body isn">A conjunção fica exata às 14h22 e se separa depois disso. Das 19h40 em diante a Lua entra em fora de curso e não faz mais aspectos até amanhã de manhã — historicamente, é quando seus registros ficam mais curtos.</p>
+
+      <div class="plus-strip isn">
+        <p class="plus-title">O que o Lume Plus acrescenta</p>
+        <ul class="plus-list">
+          <li>Cruza cada trânsito com o seu arquivo inteiro, não só os últimos 6 meses</li>
+          <li>Avisa quando um trânsito do seu mapa se repete, antes de acontecer</li>
+          <li>Relatórios de padrão por planeta, casa e palavra</li>
+        </ul>
+        <button class="btn-ghost isn">Ver o que muda</button>
+        <p class="plus-note">Seu arquivo é seu com ou sem assinatura. Se você cancelar, nada é apagado e a exportação continua funcionando.</p>
+      </div>
     </div>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"><path d="M9 6l6 6-6 6"/></svg>
+  </div>
+
+  <!-- linha do trânsito: bloco visível, o coração do produto -->
+  <div class="group timeline-block">
+    <p class="group-label isn">as vezes que este trânsito voltou</p>
+    <p class="tb-lead isn">Lua sobre a sua Vênus — 7 passagens desde março. Você escreveu em 4. Em 3 delas, uma palavra de pressa.</p>
+    <div class="spine home-spine">
+      <div class="pass today">
+        <span class="dot"></span>
+        <div class="pass-date"><span class="pd isn">hoje, 22 de agosto</span><span class="pnow isn">AGORA</span></div>
+        <p class="pass-quote isn">Você ainda não escreveu nesta passagem.</p>
+      </div>
+      <div class="pass">
+        <span class="dot"></span>
+        <div class="pass-date"><span class="pd isn">26 de julho</span></div>
+        <p class="pass-quote isf">"Quero resolver isso <span class="echo">rápido</span> antes que eu mude de ideia de novo."</p>
+      </div>
+      <div class="pass empty">
+        <span class="dot"></span>
+        <div class="pass-date"><span class="pd isn">29 de junho</span></div>
+        <p class="pass-quote isn">Passou e você não escreveu.</p>
+      </div>
+      <div class="pass">
+        <span class="dot"></span>
+        <div class="pass-date"><span class="pd isn">2 de junho</span></div>
+        <p class="pass-quote isf">"Se eu falar <span class="echo">hoje</span>, resolve. Se eu esperar, viro outra pessoa até segunda."</p>
+      </div>
+    </div>
+    <button class="btn-ghost isn" onclick="openTransit('hoje')">Ver as 7 passagens, uma por uma →</button>
+    <p class="tb-cold-note isn" id="tbColdNote">Enquanto isso, a leitura de hoje vem do seu mapa — e do que você marcou no onboarding. Nada aqui é inventado para preencher espaço.</p>
+  </div>
+
+  <!-- o que vem de você -->
+  <div class="mine-block">
+    <div class="compose-feature">
+      <p class="cf-eyebrow isn">Reflexão do dia</p>
+
+      <div class="cf-state" id="stateRich">
+        <p class="cf-q isf">Nas outras vezes, apareceu pressa. E hoje, como está?</p>
+        <p class="cf-because isn">Nas 4 passagens anteriores da Lua pela sua Vênus, você escreveu sobre resolver algo rápido. Esta é a 5ª — a partir dela eu consigo comparar.</p>
+      </div>
+
+      <div class="cf-state" id="stateNew" style="display:none;">
+        <p class="cf-q isf">A Lua toca hoje a área de vínculos no seu mapa. Tem algo aí agora?</p>
+        <p class="cf-because isn">Do seu mapa, não do seu signo. É a 1ª vez que registro esta passagem — a partir da 5ª eu consigo comparar com o que você escreveu antes.</p>
+      </div>
+
+      <textarea class="cf-box isn" placeholder="Escreva algumas linhas…"></textarea>
+
+      <label class="cf-track isn">
+        <input type="checkbox" id="trackDecision" onchange="toggleTrack(this)">
+        <span class="cf-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M4 12l6 6L20 5"/></svg></span>
+        <span class="cf-track-text">Quero acompanhar o desfecho disso</span>
+      </label>
+      <p class="cf-track-note isn" id="trackNote">Vira uma decisão aberta. Pergunto de novo em <b>20 de novembro</b>.</p>
+
+      <div class="cf-actions">
+        <button class="cf-save isn" onclick="saveEntry(this)">Salvar</button>
+      </div>
+      <p class="cf-dest isn">Vai para o seu histórico marcado com o trânsito de hoje — é assim que ele volta a aparecer.</p>
+      <p class="save-msg cf-msg isn">Salvo no seu histórico, com o trânsito de hoje.</p>
+    </div>
+
+    <div class="decisions-card expanded" id="decisionsCard">
+      <div class="decisions-head isn" onclick="toggleDecisionsCard()" role="button" tabindex="0">
+        <div>
+          <p class="d-title isn">3 decisões esperando desfecho</p>
+          <p class="d-sub isn">a mais antiga tem 5 meses</p>
+        </div>
+        <svg class="decisions-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="decisions-body">
+        <div class="decision-mini" onclick="goToDecision('Aceitar a proposta')">
+          <div class="decision-mini-top isn">
+            <span class="name">Aceitar a proposta</span>
+            <span class="status-pill waiting isn">pergunto em 12 nov</span>
+          </div>
+          <p class="decision-mini-note isn">Mercúrio retrógrado · há 12 dias</p>
+        </div>
+        <div class="decision-mini" onclick="goToDecision('Mudar de cidade')">
+          <div class="decision-mini-top isn">
+            <span class="name">Mudar de cidade</span>
+            <span class="status-pill progress isn">em curso</span>
+          </div>
+          <p class="decision-mini-note isn">Retorno solar · há 2 meses</p>
+        </div>
+        <div class="decision-mini" onclick="goToDecision('Voltar a estudar')">
+          <div class="decision-mini-top isn">
+            <span class="name">Voltar a estudar</span>
+            <span class="status-pill waiting isn">pergunto em 3 set</span>
+          </div>
+          <p class="decision-mini-note isn">Júpiter na casa 2 · há 5 meses</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-divider"></div>
+
+    <div class="callback-card">
+      <div class="callback-top isn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7M3 12V6m0 6h6"/></svg>
+        <span>há 1 ano, no mesmo trânsito</span>
+      </div>
+      <p class="callback-quote isf">"Acho que confiar é a parte que eu nunca aprendi a fazer sem me anular."</p>
+      <span class="block-link isn" onclick="goTab('historico')">reler no histórico →</span>
+    </div>
+  </div>
+
+  <!-- céu de hoje -->
+  <div class="group">
+    <p class="group-label isn">o céu hoje</p>
+
+    <p class="sky-primary isn">Lua em Peixes, minguante · 9°14'</p>
+    <p class="sky-secondary isn">Conjunção com sua Vênus natal (9°02'), exata às 14h22 — aplicando agora.</p>
+
+    <div class="sky-facts isn">
+      <div class="fact"><span class="fk">Fora de curso</span><span class="fv">19h40 → 06h12, quando entra em Áries</span></div>
+      <div class="fact"><span class="fk">Retrógrados</span><span class="fv">Mercúrio até 11 set · Saturno 27 nov · Netuno 10 dez</span></div>
+      <div class="fact"><span class="fk">Ciclo longo</span><span class="fv">Saturno na casa 10 — mês 7 de 31, até fev/2029</span></div>
+      <div class="fact"><span class="fk">Próximo retorno</span><span class="fv">Vênus, 14 de setembro</span></div>
+    </div>
+
+    <p class="tech-footer isn">Signos inteiros · trópico · America/Sao_Paulo · Swiss Ephemeris</p>
+  </div>
+
+  <!-- semana -->
+  <div class="group" style="margin-bottom:6px;">
+    <p class="group-label isn">sua semana</p>
+    <div class="duo isn">
+      <div><span class="dn">5</span><span class="dl">registros</span></div>
+      <div><span class="dn">3×</span><span class="dl">"medo de repetir"</span></div>
+      <div><span class="dn">1</span><span class="dl">decisão avançou</span></div>
+    </div>
+    <span class="block-link isn" onclick="goTab('padroes')">ver seus padrões →</span>
   </div>
 </section>
 
-<!-- DECISOES -->
+<!-- ============ DECISÕES ============ -->
 <section class="screen" data-screen="decisoes">
-  <div class="list-view">
-    <p class="section-title isn">Decisões abertas</p>
-    <p class="section-sub isn">3 esperando desfecho</p>
+  <div class="list-view" id="listView">
+    <p class="section-title isn">Decisões</p>
+    <p class="section-sub isn">3 esperando desfecho · 9 já fechadas</p>
 
     <div class="decision-card" onclick="openDecision(this)"
-         data-name="Aceitar a proposta" data-age="há 12 dias"
+         data-name="Aceitar a proposta" data-age="há 12 dias" data-ask="12 de novembro"
+         data-context="Mercúrio retrógrado em Virgem · Lua em Capricórnio"
          data-quote="Tenho medo de repetir o que aconteceu no último trabalho.">
       <div class="decision-card-top isn">
         <span class="name">Aceitar a proposta</span>
         <span class="age">há 12 dias</span>
       </div>
       <p class="decision-note isn">Mercúrio retrógrado · você anotou "medo de repetir"</p>
-      <span class="status-pill waiting isn">aguardando</span>
+      <span class="status-pill waiting isn">pergunto em 12 nov</span>
     </div>
 
     <div class="decision-card" onclick="openDecision(this)"
-         data-name="Mudar de cidade" data-age="há 2 meses"
+         data-name="Mudar de cidade" data-age="há 2 meses" data-ask="14 de setembro"
+         data-context="Sol na casa 4 · Vênus em Câncer"
          data-quote="Ainda não sei se é a cidade ou se sou eu tentando fugir de alguma coisa.">
       <div class="decision-card-top isn">
         <span class="name">Mudar de cidade</span>
@@ -473,77 +871,303 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
       <span class="status-pill progress isn">em curso</span>
     </div>
 
-    <div class="add-decision isn">
+    <div class="decision-card" onclick="openDecision(this)"
+         data-name="Voltar a estudar" data-age="há 5 meses" data-ask="3 de setembro"
+         data-context="Júpiter na casa 2 · Lua nova em Peixes"
+         data-quote="Se eu não fizer agora, vou passar mais um ano inteiro adiando.">
+      <div class="decision-card-top isn">
+        <span class="name">Voltar a estudar</span>
+        <span class="age">há 5 meses</span>
+      </div>
+      <p class="decision-note isn">Júpiter na casa 2 · você anotou "adiando"</p>
+      <span class="status-pill waiting isn">pergunto em 3 set</span>
+    </div>
+
+    <div class="add-decision isn" role="button" tabindex="0">
       <span>+ Abrir uma decisão</span>
+    </div>
+
+    <span class="closed-toggle isn" onclick="toggleClosed()" id="closedToggle">Ver as 9 decisões fechadas</span>
+    <div class="closed-list" id="closedList">
+      <div class="closed-row isn"><span>Mudar o combinado com o cliente</span><span class="out">foi misto · jul/2026</span></div>
+      <div class="closed-row isn"><span>Antecipar a conversa com o chefe</span><span class="out">foi misto · jun/2026</span></div>
+      <div class="closed-row isn"><span>Sair do apartamento antigo</span><span class="out">deu certo · mar/2026</span></div>
+      <div class="closed-row isn"><span>Emprestar dinheiro pra minha irmã</span><span class="out">foi misto · fev/2026</span></div>
+      <div class="closed-row isn"><span>Cortar contato com R.</span><span class="out">deu certo · jan/2026</span></div>
+      <div class="closed-row isn"><span>Aceitar o freela de dezembro</span><span class="out">deu errado · dez/2025</span></div>
+      <div class="closed-row isn"><span>Voltar pra terapia</span><span class="out">deu certo · out/2025</span></div>
+      <div class="closed-row isn"><span>Terminar o curso pela metade</span><span class="out">foi misto · ago/2025</span></div>
     </div>
   </div>
 
   <div class="detail-view" id="detailView">
-    <div class="back-row isn" onclick="closeDecision()">
+    <button class="back-row isn" onclick="closeDecision()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
       <span>Decisões</span>
-    </div>
-    <p class="detail-tag isn">90 dias depois</p>
+    </button>
+    <p class="detail-tag isn" id="detailTag">Aberta há 12 dias</p>
     <p class="detail-question isf" id="detailQuestion">Você decidiu aceitar a proposta. Como terminou?</p>
     <div class="quote-box">
       <p class="quote-label isn">Na época você escreveu</p>
       <p class="quote-text" id="detailQuote">"Tenho medo de repetir o que aconteceu no último trabalho."</p>
+      <p class="quote-context isn" id="detailContext">Mercúrio retrógrado em Virgem · Lua em Capricórnio</p>
     </div>
     <div class="outcomes isn">
-      <div class="outcome-btn" onclick="selectOutcome(this)">Deu certo</div>
-      <div class="outcome-btn" onclick="selectOutcome(this)">Deu errado</div>
-      <div class="outcome-btn" onclick="selectOutcome(this)">Foi misto</div>
-      <div class="outcome-btn" onclick="selectOutcome(this)">Ainda não sei</div>
+      <button class="outcome-btn" onclick="selectOutcome(this)">Deu certo</button>
+      <button class="outcome-btn" onclick="selectOutcome(this)">Deu errado</button>
+      <button class="outcome-btn" onclick="selectOutcome(this)">Foi misto</button>
+      <button class="outcome-btn" onclick="selectOutcome(this)">Ainda não sei</button>
     </div>
-    <p class="detail-footnote isn">Isso alimenta seu histórico. Ninguém mais vê.</p>
+    <div class="reflect" id="reflectBox">
+      <p class="reflect-q isn">O que você faria diferente?</p>
+      <textarea class="reflect-box isn" placeholder="Opcional. Uma linha basta."></textarea>
+      <button class="save-btn" onclick="saveEntry(this)">Salvar desfecho</button>
+      <p class="save-msg isn">Salvo. Isso fica só com você.</p>
+    </div>
+    <p class="detail-footnote isn" id="detailFoot">Se você não marcar nada, eu pergunto de novo em <b>12 de novembro</b> — e só nessa data. Isso alimenta seus padrões e ninguém mais vê.</p>
   </div>
 </section>
 
-<!-- CICLOS -->
-<section class="screen" data-screen="ciclos">
-  <p class="section-title isn">Ciclos em curso</p>
-  <p class="section-sub isn">trânsitos longos que atravessam meses ou anos</p>
+<!-- ============ PADRÕES ============ -->
+<section class="screen" data-screen="padroes">
+  <p class="section-title isn">Padrões</p>
+  <p class="section-sub isn">O que aparece quando alguém olha por tempo suficiente. Só entra aqui o que você mesma registrou.</p>
 
-  <div class="cycle-card">
-    <div class="cycle-top isn">
-      <span class="cname">Saturno na casa 10</span>
-      <span class="cmeta">mês 7 de 29</span>
+  <div class="pattern-card">
+    <div class="pattern-top">
+      <p class="pattern-title isn">Decisões tomadas em Mercúrio retrógrado</p>
+      <span class="pattern-n isn">7 decisões</span>
     </div>
-    <div class="progress-track"><div class="progress-fill" style="width:24%"></div></div>
-    <p class="cycle-desc isn">Um ciclo longo sobre trabalho e autoridade. Você já registrou 4 decisões dentro dele — incluindo "aceitar a proposta", ainda aberta.</p>
+    <p class="pattern-sub isn">Comparado com 14 decisões fora de retrógrado.</p>
+    <div class="bar-row isn"><span class="bl">Foi misto</span><span class="bt"><span class="bf" style="width:57%"></span></span><span class="bn">4</span></div>
+    <div class="bar-row isn"><span class="bl">Deu errado</span><span class="bt"><span class="bf" style="width:29%"></span></span><span class="bn">2</span></div>
+    <div class="bar-row isn"><span class="bl">Deu certo</span><span class="bt"><span class="bf" style="width:14%"></span></span><span class="bn">1</span></div>
+    <p class="pattern-note isn">Fora de retrógrado, "deu certo" responde por metade dos seus desfechos. Isso não diz que Mercúrio causa alguma coisa — diz que você decide diferente nesses períodos.</p>
   </div>
 
-  <div class="cycle-mini isn">
-    <span class="label">Retorno solar</span>
-    <span class="when">começa em set</span>
+  <div class="pattern-card">
+    <div class="pattern-top">
+      <p class="pattern-title isn">Quanto tempo até você saber</p>
+      <span class="pattern-n isn">21 decisões</span>
+    </div>
+    <p class="pattern-sub isn">Da abertura até você marcar um desfecho.</p>
+    <div class="duo isn" style="margin-top:12px;">
+      <div><span class="dn">4 meses</span><span class="dl">decisões abertas em trânsitos de Vênus</span></div>
+      <div><span class="dn">6 semanas</span><span class="dl">todas as outras</span></div>
+    </div>
+    <p class="pattern-note isn">Nenhuma das suas decisões de vínculo fechou em menos de dois meses.</p>
   </div>
-  <div class="cycle-mini isn">
-    <span class="label">Trânsito de Júpiter pela casa 2</span>
-    <span class="when">termina em nov</span>
+
+  <div class="pattern-card">
+    <div class="pattern-top">
+      <p class="pattern-title isn">Palavras que voltam</p>
+      <span class="pattern-n isn">142 registros</span>
+    </div>
+    <p class="pattern-sub isn">Toque para ver os registros.</p>
+    <div class="word-row isn" onclick="searchHistorico('medo de repetir')"><span>"medo de repetir"</span><span class="wc">11× · desde out/2025</span></div>
+    <div class="word-row isn" onclick="searchHistorico('fugir')"><span>"fugir"</span><span class="wc">6× · desde mar/2026</span></div>
+    <div class="word-row isn" onclick="searchHistorico('rápido')"><span>"rápido"</span><span class="wc">5× · desde mai/2026</span></div>
+    <div class="word-row isn" onclick="searchHistorico('anular')"><span>"me anular"</span><span class="wc">4× · desde ago/2025</span></div>
+  </div>
+
+  <div class="pattern-card thin">
+    <div class="pattern-top">
+      <p class="pattern-title isn">Lua sobre sua Vênus</p>
+      <span class="pattern-n isn">4 registros · amostra pequena</span>
+    </div>
+    <p class="pattern-sub isn">Aparece em cinza porque ainda não chegou a cinco. Abaixo disso, eu não trato como padrão — e você também não deveria.</p>
+    <div class="bar-row isn"><span class="bl">Foi misto</span><span class="bt"><span class="bf" style="width:50%"></span></span><span class="bn">2</span></div>
+    <div class="bar-row isn"><span class="bl">Sem desfecho</span><span class="bt"><span class="bf" style="width:50%"></span></span><span class="bn">2</span></div>
+    <span class="block-link isn" onclick="openTransit('padroes')">ver as 7 passagens →</span>
+  </div>
+
+  <div class="pattern-card">
+    <div class="pattern-top">
+      <p class="pattern-title isn">Seu arquivo</p>
+      <span class="pattern-n isn">desde março de 2025</span>
+    </div>
+    <p class="pattern-sub isn">142 registros em 17 meses.</p>
+    <div class="archive-strip">
+      <div style="height:40%"></div><div style="height:65%"></div><div style="height:30%"></div>
+      <div style="height:80%"></div><div style="height:55%"></div><div style="height:20%"></div>
+      <div style="height:70%"></div><div style="height:90%"></div><div style="height:45%"></div>
+      <div style="height:60%"></div><div style="height:35%"></div><div style="height:75%"></div>
+      <div style="height:50%"></div><div style="height:85%"></div><div style="height:40%"></div>
+      <div style="height:65%"></div><div style="height:55%"></div>
+    </div>
+    <p class="pattern-note isn">Não existe sequência a manter aqui. Meses vazios não tiram nada de você.</p>
+    <span class="block-link isn" onclick="openSettings()">exportar tudo →</span>
   </div>
 </section>
 
-<!-- HISTORICO -->
+<!-- ============ LINHA DO TRÂNSITO ============ -->
+<section class="screen" data-screen="transito">
+  <button class="back-row isn" onclick="goTab(transitOrigin)">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    <span>Voltar</span>
+  </button>
+
+  <p class="transit-eyebrow isn">trânsito recorrente</p>
+  <p class="transit-title isf">Lua sobre a sua Vênus</p>
+  <p class="transit-meta isn">Vênus natal a 9°02' de Peixes, casa 8. A Lua volta a esse grau a cada 27 dias e 8 horas. Cada passagem dura cerca de 13 horas dentro do orbe de 3°.</p>
+
+  <div class="transit-stats isn">
+    <div><span class="tn">7</span><span class="tl">passagens desde março</span></div>
+    <div><span class="tn">4</span><span class="tl">com registro seu</span></div>
+    <div><span class="tn">2</span><span class="tl">decisões abertas nelas</span></div>
+  </div>
+
+  <p class="transit-caveat isn">Quatro registros ainda é amostra pequena — abaixo de cinco eu não trato como padrão. O que está abaixo é o que você escreveu, sem interpretação minha.</p>
+
+  <div class="spine">
+
+    <div class="pass future">
+      <span class="dot"></span>
+      <div class="pass-date"><span class="pd isn">18 de setembro</span></div>
+      <p class="pass-tech isn">próxima passagem · exata às 09h47 · daqui a 27 dias</p>
+      <p class="pass-quote isn">Se quiser, eu te aviso na véspera. Uma vez só, sem insistir.</p>
+    </div>
+
+    <div class="pass today">
+      <span class="dot"></span>
+      <div class="pass-date"><span class="pd isn">sábado, 22 de agosto</span><span class="pnow isn">HOJE</span></div>
+      <p class="pass-tech isn">exata às 14h22 · 12' aplicando agora</p>
+      <p class="pass-quote isn">Você ainda não escreveu nesta passagem.</p>
+      <span class="block-link isn" onclick="goTab('hoje')" style="margin-top:6px;">escrever agora →</span>
+    </div>
+
+    <div class="pass">
+      <span class="dot"></span>
+      <div class="pass-date"><span class="pd isn">26 de julho</span></div>
+      <p class="pass-tech isn">exata às 21h04 · você escreveu 40 minutos depois</p>
+      <p class="pass-quote isf">"Quero resolver isso <span class="echo">rápido</span> antes que eu mude de ideia de novo."</p>
+      <span class="pass-tie isn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h6a4 4 0 0 1 4 4v6"/></svg>
+        abriu "mudar o combinado com o cliente" · terminou <b>foi misto</b>
+      </span>
+    </div>
+
+    <div class="pass empty">
+      <span class="dot"></span>
+      <div class="pass-date"><span class="pd isn">29 de junho</span></div>
+      <p class="pass-tech isn">exata às 04h11 · Lua fora de curso em quase toda a passagem</p>
+      <p class="pass-quote isn">Passou e você não escreveu. Isso também é informação.</p>
+    </div>
+
+    <div class="pass">
+      <span class="dot"></span>
+      <div class="pass-date"><span class="pd isn">2 de junho</span></div>
+      <p class="pass-tech isn">exata às 12h38 · você escreveu no mesmo dia</p>
+      <p class="pass-quote isf">"Se eu falar <span class="echo">hoje</span>, resolve. Se eu esperar, viro outra pessoa até segunda."</p>
+      <span class="pass-tie isn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h6a4 4 0 0 1 4 4v6"/></svg>
+        abriu "antecipar a conversa com o chefe" · terminou <b>foi misto</b>
+      </span>
+    </div>
+
+    <div class="pass">
+      <span class="dot"></span>
+      <div class="pass-date"><span class="pd isn">6 de maio</span></div>
+      <p class="pass-tech isn">exata às 18h55 · você escreveu na manhã seguinte</p>
+      <p class="pass-quote isf">"Não é urgente. Eu que estou com <span class="echo">pressa</span>."</p>
+    </div>
+
+    <div class="pass empty">
+      <span class="dot"></span>
+      <div class="pass-date"><span class="pd isn">9 de abril</span></div>
+      <p class="pass-tech isn">exata às 02h20 · madrugada</p>
+      <p class="pass-quote isn">Passou e você não escreveu.</p>
+    </div>
+
+    <div class="pass">
+      <span class="dot"></span>
+      <div class="pass-date"><span class="pd isn">13 de março</span></div>
+      <p class="pass-tech isn">exata às 15h02 · você escreveu 2 horas antes</p>
+      <p class="pass-quote isf">"Se eu não fizer <span class="echo">agora</span>, vou passar mais um ano inteiro adiando."</p>
+      <span class="pass-tie isn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h6a4 4 0 0 1 4 4v6"/></svg>
+        abriu "voltar a estudar" · <b>ainda aberta</b>
+      </span>
+    </div>
+
+  </div>
+
+  <span class="deep-toggle isn" onclick="toggleDeep()" id="deepToggle">Ir mais fundo no arquivo (2025)</span>
+  <div class="deep-list" id="deepList">
+    <div class="spine">
+      <div class="pass">
+        <span class="dot"></span>
+        <div class="pass-date"><span class="pd isn">22 de agosto de 2025</span></div>
+        <p class="pass-tech isn">exata às 11h30 · um ano atrás, no mesmo grau</p>
+        <p class="pass-quote isf">"Acho que confiar é a parte que eu nunca aprendi a fazer sem me anular."</p>
+      </div>
+      <div class="pass empty">
+        <span class="dot"></span>
+        <div class="pass-date"><span class="pd isn">março a dezembro de 2025</span></div>
+        <p class="pass-tech isn">10 passagens</p>
+        <p class="pass-quote isn">Sem registro. Você tinha acabado de começar a escrever aqui.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="echo-summary isn">
+    <p><b>O que se repete:</b> em 3 das 4 passagens em que você escreveu, apareceu uma palavra de pressa — <span class="echo">rápido</span>, <span class="echo">hoje</span>, <span class="echo">agora</span>. Na quarta, você mesma nomeou isso.</p>
+    <p style="opacity:0.65; font-size:12px;">Das duas decisões abertas nessas passagens, as duas terminaram em "foi misto". Duas não fazem uma regra — é só o que existe até aqui.</p>
+  </div>
+
+  <div class="transit-actions">
+    <button class="btn-primary isn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13"/></svg>
+      Compartilhar esta linha
+    </button>
+    <button class="btn-ghost isn" onclick="goTab('padroes')">Ver outros trânsitos</button>
+  </div>
+  <p class="transit-caveat isn" style="margin-top:14px;">O compartilhamento gera uma imagem só com as datas e o trânsito. O que você escreveu não vai junto, a menos que você marque cada trecho.</p>
+</section>
+
+<!-- ============ HISTÓRICO ============ -->
 <section class="screen" data-screen="historico">
   <p class="section-title isn">Seu histórico</p>
-  <p class="section-sub isn">142 registros desde março de 2026</p>
+  <p class="section-sub isn">142 registros desde março de 2025</p>
 
-  <div class="timeline-item highlight">
-    <div class="timeline-meta isn"><span>22 ago 2025</span><span>mesmo trânsito de hoje</span></div>
-    <p class="timeline-quote">"Acho que confiar é a parte que eu nunca aprendi a fazer sem me anular."</p>
+  <input class="search-box isn" id="histSearch" type="search" placeholder="Buscar no que você escreveu…" oninput="filterHistorico()">
+
+  <div class="filter-row" id="filterRow">
+    <button class="filter-chip isn on" data-filter="todos" onclick="setFilter(this)">Tudo</button>
+    <button class="filter-chip isn" data-filter="lua-venus" onclick="setFilter(this)">Lua × Vênus</button>
+    <button class="filter-chip isn" data-filter="mercurio-retro" onclick="setFilter(this)">Mercúrio retró</button>
+    <button class="filter-chip isn" data-filter="lua-nova" onclick="setFilter(this)">Lua nova</button>
+    <button class="filter-chip isn" data-filter="decisao" onclick="setFilter(this)">Ligado a decisão</button>
   </div>
-  <div class="timeline-item">
-    <div class="timeline-meta isn"><span>14 jun 2026</span><span>Sol em Gêmeos</span></div>
-    <p class="timeline-quote">"Acho que finalmente falei o que sentia, sem ensaiar antes."</p>
+
+  <div id="histList">
+    <div class="timeline-item highlight" data-tags="lua-venus" data-text="acho que confiar é a parte que eu nunca aprendi a fazer sem me anular">
+      <div class="timeline-meta isn"><span>22 ago 2025</span><span>Lua × Vênus · mesmo trânsito de hoje</span></div>
+      <p class="timeline-quote">"Acho que confiar é a parte que eu nunca aprendi a fazer sem me anular."</p>
+    </div>
+    <div class="timeline-item" data-tags="lua-venus decisao" data-text="quero resolver isso rápido antes que eu mude de ideia de novo">
+      <div class="timeline-meta isn"><span>29 jul 2026</span><span>Lua × Vênus</span></div>
+      <p class="timeline-quote">"Quero resolver isso rápido antes que eu mude de ideia de novo."</p>
+    </div>
+    <div class="timeline-item" data-tags="" data-text="acho que finalmente falei o que sentia sem ensaiar antes">
+      <div class="timeline-meta isn"><span>14 jun 2026</span><span>Sol em Gêmeos</span></div>
+      <p class="timeline-quote">"Acho que finalmente falei o que sentia, sem ensaiar antes."</p>
+    </div>
+    <div class="timeline-item" data-tags="mercurio-retro decisao" data-text="reli o contrato três vezes antes de assinar ainda tenho medo de repetir">
+      <div class="timeline-meta isn"><span>3 mai 2026</span><span>Mercúrio retrógrado · decisão "aceitar a proposta"</span></div>
+      <p class="timeline-quote">"Reli o contrato três vezes antes de assinar. Ainda tenho medo de repetir."</p>
+    </div>
+    <div class="timeline-item" data-tags="lua-nova decisao" data-text="não sei se é a cidade ou se sou eu tentando fugir de alguma coisa">
+      <div class="timeline-meta isn"><span>19 mar 2026</span><span>Lua nova em Peixes</span></div>
+      <p class="timeline-quote">"Não sei se é a cidade ou se sou eu tentando fugir de alguma coisa."</p>
+    </div>
+    <div class="timeline-item" data-tags="mercurio-retro" data-text="medo de repetir de novo a mesma conversa com as mesmas palavras">
+      <div class="timeline-meta isn"><span>2 fev 2026</span><span>Mercúrio retrógrado</span></div>
+      <p class="timeline-quote">"Medo de repetir de novo a mesma conversa, com as mesmas palavras."</p>
+    </div>
   </div>
-  <div class="timeline-item">
-    <div class="timeline-meta isn"><span>3 mai 2026</span><span>Mercúrio retrógrado</span></div>
-    <p class="timeline-quote">"Reli o contrato três vezes antes de assinar. Ainda tenho medo de repetir."</p>
-  </div>
-  <div class="timeline-item">
-    <div class="timeline-meta isn"><span>19 mar 2026</span><span>Lua nova</span></div>
-    <p class="timeline-quote">"Não sei se é a cidade ou se sou eu tentando fugir de alguma coisa."</p>
-  </div>
+
+  <p class="empty-state isn" id="histEmpty">Nada aqui com esse filtro. Tente outra palavra ou volte para "Tudo".</p>
 </section>
 </div>
 
@@ -556,9 +1180,9 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 6h6a4 4 0 0 1 4 4v6"/></svg>
     <span>decisões</span>
   </button>
-  <button class="nav-btn isn" data-tab="ciclos" onclick="goTab('ciclos')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(-20 12 12)"/><circle cx="12" cy="12" r="2"/></svg>
-    <span>ciclos</span>
+  <button class="nav-btn isn" data-tab="padroes" onclick="goTab('padroes')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16"/><path d="M8 15v-3M12 15V7M16 15v-6"/></svg>
+    <span>padrões</span>
   </button>
   <button class="nav-btn isn" data-tab="historico" onclick="goTab('historico')">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
@@ -566,10 +1190,56 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
   </button>
 </nav>
 
-<!-- ONBOARDING OVERLAY -->
+<!-- ============ AJUSTES ============ -->
+<div class="overlay" id="settingsOverlay">
+  <div class="sheet themed">
+    <button class="overlay-close" onclick="closeSettings()" aria-label="Fechar">×</button>
+    <div class="sheet-scroll">
+      <p class="ob-head isf" style="font-size:20px; margin-bottom:20px;">Ajustes</p>
+
+      <div class="set-group">
+        <p class="set-label isn">Notificações</p>
+        <div class="set-row isn">
+          <span>Uma por dia, às</span>
+          <select class="isn"><option>07:00</option><option selected>08:00</option><option>12:00</option><option>19:00</option><option>Nunca</option></select>
+        </div>
+        <p class="set-hint isn">O texto da leitura vem inteiro na notificação. Nunca mandamos "veja o que te espera".</p>
+      </div>
+
+      <div class="set-group">
+        <p class="set-label isn">Astrologia</p>
+        <div class="set-row isn">
+          <span>Sistema de casas</span>
+          <select class="isn"><option selected>Signos inteiros</option><option>Placidus</option><option>Casas iguais</option><option>Koch</option></select>
+        </div>
+        <div class="set-row isn">
+          <span>Zodíaco</span>
+          <select class="isn"><option selected>Trópico</option><option>Sideral (Lahiri)</option></select>
+        </div>
+        <div class="set-row isn">
+          <span>Orbe para aspectos</span>
+          <select class="isn"><option>1°</option><option selected>3°</option><option>5°</option></select>
+        </div>
+        <p class="set-hint isn">Mudar isso recalcula as leituras futuras. O que já foi escrito não muda.</p>
+      </div>
+
+      <div class="set-group">
+        <p class="set-label isn">Seus dados</p>
+        <div class="set-row isn"><button class="set-action isn">Editar data, hora e cidade de nascimento</button></div>
+        <div class="set-row isn"><button class="set-action isn" onclick="exportData()">Exportar tudo (.json)</button></div>
+        <div class="set-row isn"><button class="set-action isn" onclick="showOnboard()">Rever o onboarding</button></div>
+        <div class="set-row isn"><button class="set-action isn" onclick="toggleColdStart()" id="coldBtn">Ver o app no primeiro mês (sem histórico)</button></div>
+        <div class="set-row isn"><button class="set-action isn danger">Apagar minha conta e meus registros</button></div>
+        <p class="set-hint isn">A exportação inclui todos os registros, decisões e desfechos, em texto legível. Funciona com ou sem assinatura.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ONBOARDING ============ -->
 <div class="overlay" id="onboardOverlay">
-  <div class="onboard-card">
-    <button class="overlay-close" onclick="closeOnboard()">×</button>
+  <div class="sheet">
+    <button class="overlay-close" onclick="closeOnboard()" aria-label="Fechar">×</button>
 
     <div class="ob-step active" data-step="1">
       <div class="ob-scroll">
@@ -582,7 +1252,7 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
 
     <div class="ob-step" data-step="2">
       <div class="ob-scroll">
-        <div class="ob-progress"><div class="done"></div><div class="done"></div><div></div></div>
+        <div class="ob-progress"><div class="done"></div><div></div><div></div><div></div></div>
         <p class="ob-head isf">Quando e onde você nasceu?</p>
         <p class="ob-body isn">A hora é o que separa você das outras pessoas do seu signo. Sem ela, o app tem que adivinhar — e aí vira horóscopo de novo.</p>
         <div class="ob-field isn"><p class="flabel">data</p><p class="fval">14 / 03 / 1991</p></div>
@@ -595,26 +1265,52 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
 
     <div class="ob-step" data-step="3">
       <div class="ob-scroll">
-        <div class="ob-progress"><div class="done"></div><div class="done"></div><div class="done"></div></div>
-        <p class="ob-head isf">O que está aberto na sua vida agora?</p>
-        <p class="ob-body isn">Uma frase basta. Isso não vai para lugar nenhum — fica aqui, e é a primeira coisa que o app vai lembrar de você.</p>
-        <textarea class="ob-textarea isn" placeholder="Uma decisão, um medo, uma pergunta…"></textarea>
+        <div class="ob-progress"><div class="done"></div><div class="done"></div><div></div><div></div></div>
+        <p class="ob-head isf">O que aconteceu no último ano?</p>
+        <p class="ob-body isn">Sem isso, o app leva meses até ter o que dizer. Com isso, eu já consigo posicionar esses momentos no seu mapa hoje. Marque o que valer, com o mês aproximado.</p>
+        <div class="back-chips" id="backChips">
+          <button class="back-chip isn" onclick="toggleBackChip(this)">Mudei de trabalho</button>
+          <button class="back-chip isn" onclick="toggleBackChip(this)">Terminei um relacionamento</button>
+          <button class="back-chip isn" onclick="toggleBackChip(this)">Me mudei</button>
+          <button class="back-chip isn" onclick="toggleBackChip(this)">Perda</button>
+          <button class="back-chip isn" onclick="toggleBackChip(this)">Decisão grande</button>
+        </div>
+        <div class="back-when isn" id="backWhen">
+          <span>mais ou menos em</span>
+          <select class="isn"><option>jan/2026</option><option selected>mar/2026</option><option>jun/2026</option><option>set/2025</option><option>não lembro</option></select>
+        </div>
+        <p class="ob-hint isn">Nada disso vai para lugar nenhum. Serve só para o app saber onde olhar.</p>
       </div>
       <div>
-        <button class="ob-btn isn" onclick="obGo(4)">Guardar</button>
-        <p class="ob-skip isn" onclick="obGo(4)">Pular por enquanto</p>
+        <button class="ob-btn isn" onclick="obGo(4)">Continuar</button>
+        <button class="ob-skip isn" onclick="obGo(4)">Não quero preencher agora</button>
       </div>
     </div>
 
     <div class="ob-step" data-step="4">
       <div class="ob-scroll">
+        <div class="ob-progress"><div class="done"></div><div class="done"></div><div class="done"></div><div></div></div>
+        <p class="ob-head isf">O que está aberto na sua vida agora?</p>
+        <p class="ob-body isn">Uma frase basta. Isso vira sua primeira decisão aberta — você vai vê-la na tela inicial hoje mesmo, e eu volto a perguntar dela em 90 dias.</p>
+        <textarea class="ob-textarea isn" placeholder="Uma decisão, um medo, uma pergunta…"></textarea>
+      </div>
+      <div>
+        <button class="ob-btn isn" onclick="obGo(5)">Guardar</button>
+        <button class="ob-skip isn" onclick="obGo(5)">Pular por enquanto</button>
+      </div>
+    </div>
+
+    <div class="ob-step" data-step="5">
+      <div class="ob-scroll">
+        <div class="ob-progress"><div class="done"></div><div class="done"></div><div class="done"></div><div class="done"></div></div>
         <p class="reading-date isn" style="margin-top:0;">sábado, 22 de agosto · seu primeiro dia</p>
-        <p class="ob-head isf" style="font-size:20px;">A lua passa hoje pela sua vênus, a 9° de peixes.</p>
-        <p class="ob-body isn">É um trânsito curto, de umas 12 horas, e no seu mapa ele toca a área de vínculos. Ainda não sei como ele costuma cair em você — vou saber depois de algumas passagens.</p>
+        <p class="ob-head isf" style="font-size:20px;">A lua passa hoje pela sua vênus, a 9° de Peixes.</p>
+        <p class="ob-body isn">Trânsito curto: entra em orbe às 06h10, fica exato às 14h22 e se separa à noite. No seu mapa ele cai na casa 8. Ainda não sei como ele costuma cair em você — vou saber depois de algumas passagens.</p>
         <div style="border:1px dashed rgba(238,234,225,0.22); border-radius:12px; padding:12px;">
-          <p class="isn" style="font-size:10.5px; letter-spacing:0.05em; color:#D7FA2C; margin:0 0 6px;">o que vem por aí</p>
-          <p class="isn" style="font-size:12.5px; line-height:1.6; opacity:0.7; margin:0;">Na 3ª ou 4ª vez que esse trânsito voltar, já consigo te mostrar o que você escreveu nas anteriores.</p>
+          <p class="isn" style="font-size:10.5px; letter-spacing:0.05em; color:rgba(238,234,225,0.5); margin:0 0 6px;">O QUE JÁ DÁ PRA VER</p>
+          <p class="isn" style="font-size:12.5px; line-height:1.6; opacity:0.75; margin:0;">Você marcou "mudei de trabalho · mar/2026". Naquele mês, Saturno tinha acabado de entrar na sua casa 10 — o mesmo ciclo que ainda está em curso, no mês 7 de 31.</p>
         </div>
+        <p class="ob-hint isn" style="margin-top:12px;">Na 3ª ou 4ª vez que o trânsito de hoje voltar, eu mostro o que você escreveu nas anteriores.</p>
       </div>
       <button class="ob-btn isn" onclick="finishOnboard()">Ir para o app</button>
     </div>
@@ -623,20 +1319,16 @@ body[data-theme="dark"] .nav-btn.active{ color:var(--acid); }
 </div>
 
 <script>
-// Troque a senha aqui:
 const SITE_PASSWORD = "claudia2026";
-
 const gate = document.getElementById('gate');
 const gateInput = document.getElementById('gateInput');
 const gateError = document.getElementById('gateError');
 
-if(sessionStorage.getItem('lumeUnlocked') === '1'){
-  gate.style.display = 'none';
-}
+if(sessionStorage.getItem('lumeUnlocked') === '1'){ gate.style.display = 'none'; }
 
 function checkGate(){
   if(gateInput.value === SITE_PASSWORD){
-    sessionStorage.setItem('lumeUnlocked', '1');
+    sessionStorage.setItem('lumeUnlocked','1');
     gate.style.display = 'none';
   } else {
     gateError.classList.add('show');
@@ -645,74 +1337,242 @@ function checkGate(){
   }
 }
 
+/* tabs */
+let transitOrigin = 'hoje';
 function goTab(tab){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.dataset.screen === tab));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const navFor = (tab === 'transito') ? transitOrigin : tab;
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === navFor));
   if(tab !== 'decisoes'){ closeDecision(); }
-  closeSettings();
+  const active = document.querySelector('.screen.active');
+  if(active){ active.scrollTop = 0; }
+}
+function openTransit(from){
+  transitOrigin = from || 'hoje';
+  goTab('transito');
+}
+function toggleDeep(){
+  const open = document.getElementById('deepList').classList.toggle('open');
+  document.getElementById('deepToggle').textContent = open ? 'Recolher o arquivo de 2025' : 'Ir mais fundo no arquivo (2025)';
 }
 
+/* tema */
 const body = document.body;
-const settingsMenu = document.getElementById('settingsMenu');
-const settingsBtn = document.getElementById('settingsBtn');
-
-document.getElementById('themeSwitch').addEventListener('click', function(e){
-  e.stopPropagation();
+document.getElementById('themeSwitch').addEventListener('click', function(){
   const isDark = body.dataset.theme === 'dark';
   body.dataset.theme = isDark ? 'light' : 'dark';
   document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#EEEAE1' : '#050606');
 });
 
-settingsBtn.addEventListener('click', function(e){
-  e.stopPropagation();
-  settingsMenu.classList.toggle('show');
-});
-function closeSettings(){ settingsMenu.classList.remove('show'); }
-document.addEventListener('click', function(e){
-  if(!settingsMenu.contains(e.target) && e.target !== settingsBtn){ closeSettings(); }
-});
+/* ajustes */
+const settingsOverlay = document.getElementById('settingsOverlay');
+document.getElementById('avatarBtn').addEventListener('click', openSettings);
+function openSettings(){ settingsOverlay.classList.add('show'); }
+function closeSettings(){ settingsOverlay.classList.remove('show'); }
+settingsOverlay.addEventListener('click', e => { if(e.target === settingsOverlay) closeSettings(); });
 
-document.getElementById('whyCard').addEventListener('click', function(){
-  this.classList.toggle('expanded');
-});
+function exportData(){
+  const dump = {
+    exportado_em: new Date().toISOString(),
+    perfil: { nome:"Claudia", nascimento:"1991-03-14T06:40", cidade:"Belo Horizonte, MG", casas:"signos inteiros", zodiaco:"trópico" },
+    registros: [
+      { data:"2025-08-22", transito:"Lua conj. Vênus natal", texto:"Acho que confiar é a parte que eu nunca aprendi a fazer sem me anular." },
+      { data:"2026-05-03", transito:"Mercúrio retrógrado", texto:"Reli o contrato três vezes antes de assinar. Ainda tenho medo de repetir." }
+    ],
+    decisoes: [
+      { nome:"Aceitar a proposta", aberta_em:"2026-08-10", contexto:"Mercúrio retrógrado em Virgem", desfecho:null, proxima_pergunta:"2026-11-12" },
+      { nome:"Mudar de cidade", aberta_em:"2026-06-19", contexto:"Sol na casa 4", desfecho:null, proxima_pergunta:"2026-09-14" }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(dump, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'lume-claudia.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 
+/* leitura */
+function toggleReading(){
+  const card = document.getElementById('readingCard');
+  const label = document.getElementById('readMoreLabel');
+  label.textContent = card.classList.toggle('expanded') ? 'Mostrar menos' : 'Ler seu panorama completo';
+}
+const whyCard = document.getElementById('whyCard');
+
+let coldStart = false;
+function toggleColdStart(){
+  coldStart = !coldStart;
+  document.getElementById('stateRich').style.display = coldStart ? 'none' : 'block';
+  document.getElementById('stateNew').style.display = coldStart ? 'block' : 'none';
+  document.getElementById('coldBtn').textContent = coldStart
+    ? 'Voltar para o app com 6 meses de arquivo'
+    : 'Ver o app no primeiro mês (sem histórico)';
+
+  // arquivo acumulado
+  document.getElementById('acNum').textContent = coldStart ? '3' : '142';
+  document.getElementById('acSub').textContent = coldStart
+    ? 'registros desde a semana passada · sem sequência a manter'
+    : 'registros desde março · sem sequência a manter';
+  const bars = coldStart
+    ? [0,0,0,0,0,0,0,0,0,'on:52',0,'on:70',0,'now:100']
+    : ['on:45','on:70',0,'on:88','on:52',0,'on:64','on:96',0,'on:58','on:38',0,'on:76','now:100'];
+  document.getElementById('acStrip').innerHTML = bars.map(b => {
+    if(b === 0) return '<i style="height:14%"></i>';
+    const [cls,h] = String(b).split(':');
+    return `<i class="${cls}" style="height:${h}%"></i>`;
+  }).join('');
+
+  // leitura do dia
+  document.querySelector('.reading-head').textContent = coldStart
+    ? 'A lua passa hoje pela sua vênus, a 9° de peixes.'
+    : 'A lua passa hoje pela sua vênus. Nas quatro vezes anteriores, você escreveu sobre pressa.';
+  document.querySelector('.reading-card .reading-body').innerHTML = coldStart
+    ? 'É um trânsito curto, de uma dúzia de horas, e no seu mapa ele toca a área de vínculos. Ainda não sei como ele costuma cair em você — vou saber depois de algumas passagens. Por enquanto, o que dá para dizer vem do mapa, não do seu arquivo.'
+    : 'Aconteceu quatro vezes desde março. Em três delas você escreveu no mesmo dia sobre querer resolver alguma coisa rápido — e em duas, depois, marcou o desfecho como <strong>"foi misto"</strong>. Quatro ainda é pouco para chamar de padrão. É só uma coincidência que já apareceu vezes suficientes para valer a pena olhar.';
+
+  // bloco da linha do trânsito
+  const tbLead = document.querySelector('.timeline-block .tb-lead');
+  const tbSpine = document.querySelector('.timeline-block .home-spine');
+  const tbBtn = document.querySelector('.timeline-block .btn-ghost');
+  const tbLabel = document.querySelector('.timeline-block .group-label');
+  if(tbLead && tbSpine){
+    tbLabel.textContent = coldStart ? 'quando este trânsito voltar' : 'as vezes que este trânsito voltou';
+    tbLead.textContent = coldStart
+      ? 'Lua sobre a sua Vênus — volta a cada 27 dias. Hoje é a primeira que eu registro. Da 5ª em diante, eu comparo o que você escreveu em cada uma.'
+      : 'Lua sobre a sua Vênus — 7 passagens desde março. Você escreveu em 4. Em 3 delas, uma palavra de pressa.';
+    tbSpine.innerHTML = coldStart
+      ? `<div class="pass today"><span class="dot"></span>
+           <div class="pass-date"><span class="pd isn">hoje, 22 de agosto</span><span class="pnow isn">1ª</span></div>
+           <p class="pass-quote isn">Você ainda não escreveu nesta passagem.</p></div>
+         <div class="pass future"><span class="dot"></span>
+           <div class="pass-date"><span class="pd isn">18 de setembro</span></div>
+           <p class="pass-quote isn">2ª passagem</p></div>
+         <div class="pass future"><span class="dot"></span>
+           <div class="pass-date"><span class="pd isn">15 de outubro</span></div>
+           <p class="pass-quote isn">3ª passagem</p></div>`
+      : `<div class="pass today"><span class="dot"></span>
+           <div class="pass-date"><span class="pd isn">hoje, 22 de agosto</span><span class="pnow isn">AGORA</span></div>
+           <p class="pass-quote isn">Você ainda não escreveu nesta passagem.</p></div>
+         <div class="pass"><span class="dot"></span>
+           <div class="pass-date"><span class="pd isn">26 de julho</span></div>
+           <p class="pass-quote isf">"Quero resolver isso <span class="echo">rápido</span> antes que eu mude de ideia de novo."</p></div>
+         <div class="pass empty"><span class="dot"></span>
+           <div class="pass-date"><span class="pd isn">29 de junho</span></div>
+           <p class="pass-quote isn">Passou e você não escreveu.</p></div>
+         <div class="pass"><span class="dot"></span>
+           <div class="pass-date"><span class="pd isn">2 de junho</span></div>
+           <p class="pass-quote isf">"Se eu falar <span class="echo">hoje</span>, resolve. Se eu esperar, viro outra pessoa até segunda."</p></div>`;
+    tbBtn.style.display = coldStart ? 'none' : 'inline-flex';
+    document.getElementById('tbColdNote').classList.toggle('show', coldStart);
+  }
+
+  // why card
+  const whyItems = document.querySelectorAll('#whyCard .why-item span');
+  if(whyItems.length === 3){
+    whyItems[1].textContent = coldStart
+      ? 'Nenhum registro seu neste trânsito ainda — hoje é a primeira passagem'
+      : '4 registros seus em trânsitos iguais, entre março e agosto';
+    whyItems[2].textContent = coldStart
+      ? 'O que você marcou no onboarding: mudou de trabalho em mar/2026'
+      : '2 decisões que você marcou como desfecho misto';
+  }
+
+  closeSettings();
+  goTab('hoje');
+}
+
+function toggleTrack(cb){
+  document.getElementById('trackNote').classList.toggle('show', cb.checked);
+  const btn = document.querySelector('.cf-save');
+  if(btn) btn.textContent = cb.checked ? 'Salvar e abrir decisão' : 'Salvar';
+}
+
+function toggleDecisionsCard(){ document.getElementById('decisionsCard').classList.toggle('expanded'); }
+function toggleClosed(){
+  const open = document.getElementById('closedList').classList.toggle('open');
+  document.getElementById('closedToggle').textContent = open ? 'Esconder decisões fechadas' : 'Ver as 9 decisões fechadas';
+}
+
+/* decisões */
+function goToDecision(name){
+  goTab('decisoes');
+  const card = document.querySelector('.decision-card[data-name="' + name + '"]');
+  if(card) openDecision(card);
+}
 function openDecision(card){
-  document.querySelector('.list-view').style.display = 'none';
+  document.getElementById('listView').style.display = 'none';
   const detail = document.getElementById('detailView');
   detail.classList.add('active');
+  document.getElementById('detailTag').textContent = 'Aberta ' + card.dataset.age;
   document.getElementById('detailQuestion').textContent = 'Você decidiu ' + card.dataset.name.toLowerCase() + '. Como terminou?';
   document.getElementById('detailQuote').textContent = '"' + card.dataset.quote + '"';
+  document.getElementById('detailContext').textContent = card.dataset.context;
+  document.getElementById('detailFoot').innerHTML =
+    'Se você não marcar nada, eu pergunto de novo em <b>' + card.dataset.ask + '</b> — e só nessa data. Isso alimenta seus padrões e ninguém mais vê.';
   detail.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('reflectBox').classList.remove('open');
 }
 function closeDecision(){
-  document.querySelector('.list-view').style.display = 'block';
-  document.getElementById('detailView').classList.remove('active');
+  const list = document.getElementById('listView');
+  if(list) list.style.display = 'block';
+  const d = document.getElementById('detailView');
+  if(d) d.classList.remove('active');
 }
 function selectOutcome(btn){
   btn.parentElement.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+  document.getElementById('reflectBox').classList.add('open');
 }
 
 function saveEntry(btn){
-  const card = btn.closest('.compose-card');
-  const msg = card.querySelector('.save-msg');
+  const scope = btn.closest('.compose-feature') || btn.closest('.compose-card') || btn.closest('.reflect');
+  const msg = scope.querySelector('.save-msg');
+  if(!msg) return;
   msg.classList.add('show');
   setTimeout(() => msg.classList.remove('show'), 2200);
 }
 
+/* histórico */
+let currentFilter = 'todos';
+function setFilter(chip){
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('on'));
+  chip.classList.add('on');
+  currentFilter = chip.dataset.filter;
+  filterHistorico();
+}
+function filterHistorico(){
+  const q = document.getElementById('histSearch').value.trim().toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('#histList .timeline-item').forEach(item => {
+    const tagOk = currentFilter === 'todos' || (item.dataset.tags || '').includes(currentFilter);
+    const textOk = !q || (item.dataset.text || '').includes(q);
+    const show = tagOk && textOk;
+    item.style.display = show ? 'block' : 'none';
+    if(show) visible++;
+  });
+  document.getElementById('histEmpty').classList.toggle('show', visible === 0);
+}
+function searchHistorico(term){
+  goTab('historico');
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('on', c.dataset.filter === 'todos'));
+  currentFilter = 'todos';
+  document.getElementById('histSearch').value = term;
+  filterHistorico();
+}
+
+/* onboarding */
 const onboardOverlay = document.getElementById('onboardOverlay');
-document.getElementById('onboardTrigger').addEventListener('click', function(){
-  onboardOverlay.classList.add('show');
-  closeSettings();
-  obGo(1);
-});
+function showOnboard(){ closeSettings(); onboardOverlay.classList.add('show'); obGo(1); }
 function closeOnboard(){ onboardOverlay.classList.remove('show'); }
 function obGo(step){
   document.querySelectorAll('.ob-step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === step));
 }
-function finishOnboard(){
-  closeOnboard();
-  goTab('hoje');
+function finishOnboard(){ closeOnboard(); goTab('hoje'); }
+function toggleBackChip(btn){
+  btn.classList.toggle('on');
+  const any = document.querySelectorAll('#backChips .back-chip.on').length > 0;
+  document.getElementById('backWhen').classList.toggle('show', any);
 }
 </script>
 
